@@ -19,9 +19,14 @@ public class Movement : MonoBehaviour
         rb = GetComponent<Rigidbody2D>();
         animator = GetComponent<Animator>();
         checkEnemy = GetComponent<CheckEnemy>();
-        checkEnemy.enemyChecked += EnemyChecked;
+        checkEnemy.EnemyChecked += EnemyChecked;
     }
 
+    private float v = 0.2f;
+    private void Update()
+    {
+            
+    }
 
     void FixedUpdate()
     {
@@ -51,14 +56,22 @@ public class Movement : MonoBehaviour
         }
     }
     
-    private void EnemyChecked(GameObject go)
+    private void EnemyChecked(GameObject[] enemies)
     {
-        GameplayManager.Instance.EnemyChecked(go.transform, transform);
-    }
-
-    IEnumerator Catching()
-    {
-        yield return new WaitForSeconds(1.5f);
-        Debug.LogError("Death");
+        if (enemies.Length <= 0) return;
+//        GameplayManager.Instance.EnemyChecked(enemies[0].transform, transform);
+        var nearEnemy = enemies[0];
+        var distance = Vector2.Distance(transform.position, nearEnemy.transform.position);
+        var deviceValue = GameplayManager.CheckGhostDeviceValue - ((distance * GameplayManager.CheckGhostDeviceValue) / GameplayManager.CheckDistance) + 1;
+        if (deviceValue > GameplayManager.CheckGhostDeviceValue)
+            deviceValue = GameplayManager.CheckGhostDeviceValue;
+        GameUI.Instance.SetIndication(deviceValue / GameplayManager.CheckGhostDeviceValue);
+        GameUI.Instance.SetText(nearEnemy.name + " " + deviceValue);
+        if (distance > GameplayManager.CheckDistance)
+        {
+            GameUI.Instance.SetText("Empty");
+            GameUI.Instance.SetIndication(0);
+        }
+            
     }
 }

@@ -6,6 +6,7 @@ using UnityEngine.UI;
 public class GameUI : MonoBehaviour
 {
     private static readonly float shakeTime = 1f;
+    private static readonly float lerpSpeed = 2f;
     
     [SerializeField] private Text indicationText;
     [SerializeField] private Slider indicationsSlider;
@@ -13,6 +14,9 @@ public class GameUI : MonoBehaviour
     private static GameUI _instance;
     private bool isIndicate = false;
     private Coroutine indicationCo;
+    private float currentValue = 0.0f;
+    private float toValue = 1.0f;
+    private bool isReset = false;
     
     public float CurrentIndicateValue { get; set; }
     public static GameUI Instance { get { return _instance; } }
@@ -25,6 +29,11 @@ public class GameUI : MonoBehaviour
             Destroy(gameObject);
     }
 
+    private void Update()
+    {
+        ResetIndication();
+    }
+
     public void SetText(string text)
     {
         indicationText.text = text;
@@ -32,9 +41,23 @@ public class GameUI : MonoBehaviour
 
     public void SetIndication(float value)
     {
-        isIndicate = value <= CheckEnemy.CheckRadius;
-        var maxValue = indicationsSlider.maxValue;
-        
+        currentValue = indicationsSlider.value;
+        toValue = value;
+        indicationsSlider.value = toValue;
+        if (value <= 0 && !isReset)
+            isReset = true;
+    }
+
+    private void ResetIndication()
+    {
+        if (isReset)
+        {
+            currentValue = Mathf.Lerp(currentValue, -0.001f, Time.deltaTime * lerpSpeed);
+            indicationsSlider.value = currentValue;
+            isReset = currentValue > toValue;
+            if(!isReset)
+                Debug.Log("ISReset");
+        }
     }
 
 }

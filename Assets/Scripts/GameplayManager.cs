@@ -7,15 +7,35 @@ public class GameplayManager : MonoBehaviour
 {
     private static readonly float distanceForEnd = 1.2f;
     private static readonly float timeForEnd = 1.5f;
+    private static readonly float checkGhostDeviceMaxValue = 5f;
+    private static readonly float checkDistance = 3f;
     
     private static GameplayManager _instance;
     private bool isEnemyCatch;
     private bool isEnd;
     private Coroutine endGameCor;
+    private bool isGamePause;
+    private float checkGhostDeviceValue;
     
     public static GameplayManager Instance { get { return _instance; } }
     public Action EndGame = () => { };
-    
+    public Action<bool> PauseGame = b => { };
+    public static float CheckGhostDeviceValue { get { return checkGhostDeviceMaxValue; } }
+    public static float CheckDistance { get { return checkDistance; } }
+
+
+    public bool IsGamePause
+    {
+        set
+        {
+            isGamePause = value;
+            PauseGame(isGamePause);
+            GamePause(isGamePause);
+        }
+
+        get { return isGamePause; }
+    }
+
     private void Awake()
     {
         if (_instance == null)
@@ -43,6 +63,11 @@ public class GameplayManager : MonoBehaviour
 
             isEnemyCatch = false;
         }           
+    }
+
+    private void GamePause(bool isPause)
+    {
+        Time.timeScale = isPause ? 0 : 1;
     }
 
     private IEnumerator CoTimeForEnd()
