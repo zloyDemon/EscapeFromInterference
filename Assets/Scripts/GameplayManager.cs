@@ -5,10 +5,7 @@ using UnityEngine;
 
 public class GameplayManager : MonoBehaviour
 {
-    private static readonly float distanceForEnd = 1.2f;
-    private static readonly float timeForEnd = 1.5f;
-    private static readonly float checkGhostDeviceMaxValue = 5f;
-    private static readonly float checkDistance = 3f;
+    public static readonly float TimeForEnd = 1.5f;
     
     private static GameplayManager _instance;
     private bool isEnemyCatch;
@@ -20,9 +17,6 @@ public class GameplayManager : MonoBehaviour
     public static GameplayManager Instance { get { return _instance; } }
     public Action EndGame = () => { };
     public Action<bool> PauseGame = b => { };
-    public static float CheckGhostDeviceValue { get { return checkGhostDeviceMaxValue; } }
-    public static float CheckDistance { get { return checkDistance; } }
-
 
     public bool IsGamePause
     {
@@ -48,12 +42,12 @@ public class GameplayManager : MonoBehaviour
     {
         var dist = Vector3.Distance(enemyTransform.position ,playerTransform.position);
         GameUI.Instance.SetText(dist.ToString());
-        if (!isEnemyCatch && dist < distanceForEnd)
+        if (!isEnemyCatch && dist < EFIUtils.DistanceForEnd)
         {
             isEnemyCatch = true;
             if (endGameCor == null)
                 endGameCor = StartCoroutine(CoTimeForEnd());
-        }else if (dist > distanceForEnd && !isEnd)
+        }else if (dist > EFIUtils.DistanceForEnd && !isEnd)
         {
             if (endGameCor != null)
             {
@@ -72,7 +66,7 @@ public class GameplayManager : MonoBehaviour
 
     private IEnumerator CoTimeForEnd()
     {
-        yield return new WaitForSeconds(timeForEnd);
+        yield return new WaitForSeconds(TimeForEnd);
         Debug.Log("Game end");
         isEnd = true;
         EndGame();

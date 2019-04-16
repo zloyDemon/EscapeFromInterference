@@ -59,15 +59,14 @@ public class Movement : MonoBehaviour
     private void EnemyChecked(GameObject[] enemies)
     {
         if (enemies.Length <= 0) return;
-//        GameplayManager.Instance.EnemyChecked(enemies[0].transform, transform);
         var nearEnemy = enemies[0];
         var distance = Vector2.Distance(transform.position, nearEnemy.transform.position);
-        var deviceValue = GameplayManager.CheckGhostDeviceValue - ((distance * GameplayManager.CheckGhostDeviceValue) / GameplayManager.CheckDistance) + 1;
-        if (deviceValue > GameplayManager.CheckGhostDeviceValue)
-            deviceValue = GameplayManager.CheckGhostDeviceValue;
-        GameUI.Instance.SetIndication(deviceValue / GameplayManager.CheckGhostDeviceValue);
+        var deviceValue = EFIUtils.DeviceValue(distance);
+        if (deviceValue > EFIUtils.CheckGhostDeviceMaxValue)
+            deviceValue = EFIUtils.CheckGhostDeviceMaxValue;
+        GameUI.Instance.SetIndication(deviceValue / EFIUtils.CheckGhostDeviceMaxValue);
         GameUI.Instance.SetText(nearEnemy.name + " " + deviceValue);
-        if (distance > GameplayManager.CheckDistance)
+        if (distance > EFIUtils.CheckDistance)
         {
             GameUI.Instance.SetText("Empty");
             GameUI.Instance.SetIndication(0);
