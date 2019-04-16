@@ -38,7 +38,7 @@ public class Movement : MonoBehaviour
     {
         float inputX = Input.GetAxis("Horizontal");
         float inputY = Input.GetAxis("Vertical");
-//        Debug.Log(inputX + " -- " + inputY + " " + Mathf.RoundToInt(inputX));
+
         if ((Mathf.Abs(inputX) > 0.1 || Mathf.Abs(inputY) > 0.1))
         {
             movement.x = inputX;
