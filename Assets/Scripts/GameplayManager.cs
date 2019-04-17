@@ -6,6 +6,8 @@ using UnityEngine;
 public class GameplayManager : MonoBehaviour
 {
     public static readonly float TimeForEnd = 1.5f;
+
+    [SerializeField] Flashlight flashLight;
     
     private static GameplayManager _instance;
     private bool isEnemyCatch;
@@ -29,6 +31,8 @@ public class GameplayManager : MonoBehaviour
 
         get { return isGamePause; }
     }
+    
+    public Flashlight Flashlight { get { return flashLight; }}
 
     private void Awake()
     {
@@ -36,6 +40,13 @@ public class GameplayManager : MonoBehaviour
             _instance = this;
         if(_instance != this)
             Destroy(gameObject);
+
+        flashLight.FlashlighDead += FlashlightOff;
+    }
+
+    private void OnDestroy()
+    {
+        flashLight.FlashlighDead -= FlashlightOff;
     }
 
     public void EnemyChecked(Transform enemyTransform, Transform playerTransform)
@@ -57,6 +68,11 @@ public class GameplayManager : MonoBehaviour
 
             isEnemyCatch = false;
         }           
+    }
+
+    private void FlashlightOff()
+    {
+        Debug.Log("Flashlight off!");
     }
 
     private void GamePause(bool isPause)

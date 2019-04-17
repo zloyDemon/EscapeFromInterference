@@ -27,6 +27,12 @@ public class GameUI : MonoBehaviour
             _instance = this;
         if(_instance != this)
             Destroy(gameObject);
+        GameplayManager.Instance.Flashlight.FlashlightChangeValue += FlashlightChargeChange;
+    }
+
+    private void OnDestroy()
+    {
+        GameplayManager.Instance.Flashlight.FlashlightChangeValue -= FlashlightChargeChange;
     }
 
     private void Update()
@@ -58,6 +64,11 @@ public class GameUI : MonoBehaviour
             if(!isReset)
                 Debug.Log("ISReset");
         }
+    }
+
+    private void FlashlightChargeChange(float value)
+    {
+        Debug.Log("FL Value: " + value);
     }
 
 }
