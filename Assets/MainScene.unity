@@ -2110,7 +2110,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f75e6910e28ba3d46821c21288787af9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  flashLight: {fileID: 847525346}
+  flashlight: {fileID: 847525346}
 --- !u!4 &416021663
 Transform:
   m_ObjectHideFlags: 0
@@ -3604,6 +3604,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   indicationText: {fileID: 1930694207}
   indicationsSlider: {fileID: 2089290711}
+  batteryChargeSlider: {fileID: 1762760571}
 --- !u!222 &1926249167
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -4241,6 +4242,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Light
       objectReference: {fileID: 0}
+    - target: {fileID: 1431077648721121339, guid: fa95296591d6b8141a1cd11acd4ac2be,
+        type: 3}
+      propertyPath: target
+      value: 
+      objectReference: {fileID: 1576561240}
     - target: {fileID: 4135454348747114293, guid: fa95296591d6b8141a1cd11acd4ac2be,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -4356,11 +4362,6 @@ PrefabInstance:
       propertyPath: m_LocalScale.y
       value: 2
       objectReference: {fileID: 0}
-    - target: {fileID: 1431077648721121339, guid: fa95296591d6b8141a1cd11acd4ac2be,
-        type: 3}
-      propertyPath: target
-      value: 
-      objectReference: {fileID: 1576561240}
     - target: {fileID: 4135454348747114292, guid: fa95296591d6b8141a1cd11acd4ac2be,
         type: 3}
       propertyPath: m_Sprite
@@ -4446,6 +4447,11 @@ PrefabInstance:
       propertyPath: camera
       value: 
       objectReference: {fileID: 410288869}
+    - target: {fileID: 8048818571050640316, guid: 40d1b084b93eb2d4793ccdaf67f55da0,
+        type: 3}
+      propertyPath: flashlight
+      value: 
+      objectReference: {fileID: 847525346}
     - target: {fileID: 8048818571050640315, guid: 40d1b084b93eb2d4793ccdaf67f55da0,
         type: 3}
       propertyPath: m_MaskInteraction

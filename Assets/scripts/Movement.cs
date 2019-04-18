@@ -5,7 +5,9 @@ using UnityEngine;
 
 public class Movement : MonoBehaviour
 {
-    [SerializeField]private float MoveSpeed = 25f;
+    [SerializeField] float MoveSpeed = 25f;
+    [SerializeField] Flashlight flashlight;
+    
     private Rigidbody2D rb;
     private Vector2 movement;
     private Animator animator;
@@ -13,6 +15,12 @@ public class Movement : MonoBehaviour
     private Coroutine checkingCor;
     
     public GameObject camera;
+
+    private void Awake()
+    {
+        flashlight.FlashlightChangeValue += FlashlightChangeValue; 
+        flashlight.FlashlighDead += FlashlightDead;
+    }
 
     void Start()
     {
@@ -22,7 +30,12 @@ public class Movement : MonoBehaviour
         checkEnemy.EnemyChecked += EnemyChecked;
     }
 
-    private float v = 0.2f;
+    private void OnDestroy()
+    {
+        flashlight.FlashlightChangeValue -= FlashlightChangeValue;
+        flashlight.FlashlighDead -= FlashlightDead;
+    }
+
     private void Update()
     {
             
@@ -72,5 +85,15 @@ public class Movement : MonoBehaviour
             GameUI.Instance.SetIndication(0);
         }
             
+    }
+    
+    private void FlashlightChangeValue(float value)
+    {
+        GameUI.Instance.FlashlightChargeChange(value);
+    }
+    
+    private void FlashlightDead()
+    {
+        GameplayManager.Instance.FlashlightDead();
     }
 }

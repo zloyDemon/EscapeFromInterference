@@ -9,7 +9,7 @@ public class Flashlight : MonoBehaviour
     [SerializeField] Transform target;
     
     private const float FlashlightMaxValue = 5f;
-    private const float FlashlightMinValue = 1f;
+    private const float FlashlightMinValue = 0f;
     private const float FlashlighPassValueTime = 1f;
     private const float FlashlightReduceDuration = 0.1f;
     private const float FlashlightScaleEndValue = 1f;
@@ -31,6 +31,8 @@ public class Flashlight : MonoBehaviour
         get { return flashlightValue; }
         set { flashlightValue = value; }
     }
+    
+    public static float FlashlighMaxValue { get { return FlashlightMaxValue; }}
 
     private void Awake()
     {

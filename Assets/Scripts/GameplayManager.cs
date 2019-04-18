@@ -7,16 +7,18 @@ public class GameplayManager : MonoBehaviour
 {
     public static readonly float TimeForEnd = 1.5f;
 
-    [SerializeField] Flashlight flashLight;
+    [SerializeField] Flashlight flashlight;
     
-    private static GameplayManager _instance;
+    private static GameplayManager instance;
     private bool isEnemyCatch;
     private bool isEnd;
     private Coroutine endGameCor;
     private bool isGamePause;
     private float checkGhostDeviceValue;
     
-    public static GameplayManager Instance { get { return _instance; } }
+    public static GameplayManager Instance { get { return instance; } }
+    public Flashlight Flashlight { get { return flashlight; }}
+    
     public Action EndGame = () => { };
     public Action<bool> PauseGame = b => { };
 
@@ -25,28 +27,24 @@ public class GameplayManager : MonoBehaviour
         set
         {
             isGamePause = value;
-            PauseGame(isGamePause);
             GamePause(isGamePause);
         }
 
         get { return isGamePause; }
     }
     
-    public Flashlight Flashlight { get { return flashLight; }}
 
     private void Awake()
     {
-        if (_instance == null)
-            _instance = this;
-        if(_instance != this)
+        if (instance == null)
+            instance = this;
+        if(instance != this)
             Destroy(gameObject);
-
-        flashLight.FlashlighDead += FlashlightOff;
     }
 
     private void OnDestroy()
     {
-        flashLight.FlashlighDead -= FlashlightOff;
+
     }
 
     public void EnemyChecked(Transform enemyTransform, Transform playerTransform)
@@ -70,14 +68,24 @@ public class GameplayManager : MonoBehaviour
         }           
     }
 
-    private void FlashlightOff()
+    public void FlashlightDead()
     {
-        Debug.Log("Flashlight off!");
+        Debug.Log("Flashlight Dead! End Game");
     }
 
     private void GamePause(bool isPause)
     {
         Time.timeScale = isPause ? 0 : 1;
+        PauseGame(isPause);
+    }
+
+    //Not use yet
+    private void GameEnd(bool isEnd)
+    {
+        if (isEnd && endGameCor == null)
+        {
+            endGameCor = StartCoroutine(CoTimeForEnd());
+        }
     }
 
     private IEnumerator CoTimeForEnd()
