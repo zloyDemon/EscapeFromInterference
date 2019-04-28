@@ -19,26 +19,29 @@ public class DungeonManager : MonoBehaviour
     private Tilemap groundTileMap;
 
     public static DungeonManager Instance { get; private set; }
-    public int CurrentLevel { get; private set; }
+    public int DungLevel { get; private set; }
+    public List<Vector3> AvailablePosition { get { return availablePosition; }}
     public event Action LevelLoaded = () => {};
-    
+
     private void Awake()
     {
         if (Instance == null)
             Instance = this;
         if(Instance != this)
             Destroy(gameObject);
-        
-        Debug.Log("Manager awake");
-        
-        CurrentLevel = 1;
+              
+        DungLevel = 1;
         ghostsNumber = 4;
+    }
+
+    private void Start()
+    {
         StartCoroutine(LoadLevel());
     }
-    
+
     private void Load()
     {
-        string path = string.Format(LevelPrefix, CurrentLevel);
+        string path = string.Format(LevelPrefix, DungLevel);
         var loadGrid = Resources.Load<Grid>(path);
         Grid dungeon = Instantiate(loadGrid, Vector3.zero, Quaternion.identity);
 
@@ -56,6 +59,7 @@ public class DungeonManager : MonoBehaviour
                 if (tilemapGround.HasTile(localPose))
                 {
                     var worldPosition = tilemapGround.CellToWorld(new Vector3Int(i, j, 0));
+                    worldPosition = new Vector3(worldPosition.x + 0.5f, worldPosition.y + 0.5f, 0);
                     availablePosition.Add(worldPosition);
                 }
             }  
@@ -94,8 +98,8 @@ public class DungeonManager : MonoBehaviour
     private IEnumerator LoadLevel()
     {
         Load();
-        yield return new WaitForSeconds(4);
         LevelLoaded();
+        yield break;
     }
     
     
