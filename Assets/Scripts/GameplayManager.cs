@@ -6,8 +6,6 @@ using UnityEngine;
 public class GameplayManager : MonoBehaviour
 {
     public static readonly float TimeForEnd = 1.5f;
-
-    [SerializeField] Flashlight flashlight;
     
     private static GameplayManager instance;
     private bool isEnemyCatch;
@@ -17,7 +15,6 @@ public class GameplayManager : MonoBehaviour
     private float checkGhostDeviceValue;
     
     public static GameplayManager Instance { get { return instance; } }
-    public Flashlight Flashlight { get { return flashlight; }}
     
     public Action EndGame = () => { };
     public Action<bool> PauseGame = b => { };
@@ -68,9 +65,9 @@ public class GameplayManager : MonoBehaviour
         }           
     }
 
-    public void FlashlightDead()
+    public void FlashlighDead()
     {
-        Debug.Log("Flashlight Dead! End Game");
+        Debug.Log("GameplayManager: Flashlight dead");
     }
 
     private void GamePause(bool isPause)

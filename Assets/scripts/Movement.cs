@@ -7,14 +7,13 @@ public class Movement : MonoBehaviour
 {
     [SerializeField] float MoveSpeed = 25f;
     [SerializeField] Flashlight flashlight;
+    [SerializeField] private GameObject camera;
     
     private Rigidbody2D rb;
     private Vector2 movement;
     private Animator animator;
     private CheckEnemy checkEnemy;
     private Coroutine checkingCor;
-    
-    public GameObject camera;
 
     private void Awake()
     {
@@ -38,7 +37,7 @@ public class Movement : MonoBehaviour
 
     private void Update()
     {
-            
+        camera.transform.position = new Vector3(transform.position.x, transform.position.y, camera.transform.position.z);
     }
 
     void FixedUpdate()
@@ -94,6 +93,6 @@ public class Movement : MonoBehaviour
     
     private void FlashlightDead()
     {
-        GameplayManager.Instance.FlashlightDead();
+        GameplayManager.Instance.FlashlighDead();
     }
 }
