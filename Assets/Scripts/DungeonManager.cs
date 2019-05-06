@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Tilemaps;
+using Random = UnityEngine.Random;
 
 public class DungeonManager : MonoBehaviour
 {
@@ -12,7 +13,8 @@ public class DungeonManager : MonoBehaviour
     [SerializeField] Tilemap tilemapFloor;
     [SerializeField] Tilemap tilemapBlack;
     [SerializeField] Tile blackTile;
-    [SerializeField] private GameObject ghostPrefab;
+    [SerializeField] GameObject ghostPrefab;
+    [SerializeField] GameObject playerPrefab;
     
     private List<Vector3> availablePosition = new List<Vector3>();
     private int ghostsNumber;
@@ -66,6 +68,7 @@ public class DungeonManager : MonoBehaviour
         }
         
         SpawnGhosts();
+        SpawnPlayer();
     }
 
     private void BlackTiles()
@@ -93,6 +96,14 @@ public class DungeonManager : MonoBehaviour
             if(spawnedGhosts >= ghostsNumber)
                 break;
         }
+    }
+
+    private void SpawnPlayer()
+    {
+        int index = Random.Range(0, AvailablePosition.Count);
+        var spawnPosition = AvailablePosition[index];
+        var player = Instantiate(playerPrefab);
+        player.transform.position = spawnPosition;
     }
 
     private IEnumerator LoadLevel()

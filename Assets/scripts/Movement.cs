@@ -19,6 +19,7 @@ public class Movement : MonoBehaviour
     {
         flashlight.FlashlightChangeValue += FlashlightChangeValue; 
         flashlight.FlashlighDead += FlashlightDead;
+        camera = Camera.main.gameObject;
     }
 
     void Start()
@@ -77,10 +78,8 @@ public class Movement : MonoBehaviour
         if (deviceValue > EFIUtils.CheckGhostDeviceMaxValue)
             deviceValue = EFIUtils.CheckGhostDeviceMaxValue;
         GameUI.Instance.SetIndication(deviceValue / EFIUtils.CheckGhostDeviceMaxValue);
-        GameUI.Instance.SetText(nearEnemy.name + " " + deviceValue);
         if (distance > EFIUtils.CheckDistance)
         {
-            GameUI.Instance.SetText("Empty");
             GameUI.Instance.SetIndication(0);
         }
             
@@ -88,7 +87,7 @@ public class Movement : MonoBehaviour
     
     private void FlashlightChangeValue(float value)
     {
-        GameUI.Instance.FlashlightChargeChange(value);
+        GameItems.Instance.SetBatteryValue(value);
     }
     
     private void FlashlightDead()

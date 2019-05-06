@@ -11,7 +11,7 @@ public class Flashlight : MonoBehaviour
     
     private const float FlashlightMaxValue = 5f;
     private const float FlashlightMinValue = 0f;
-    private const float FlashlighPassValueTime = 1f;
+    private const float FlashlighPassValueTime = 5f;
     private const float FlashlightReduceDuration = 0.1f;
     private const float FlashlightScaleEndValue = 0.3f;
     private const float FlashlightStartScaleValue = 1f;
@@ -28,7 +28,9 @@ public class Flashlight : MonoBehaviour
 
     public Action FlashlighDead = () => { };
     public Action<float> FlashlightChangeValue = v => { };
-    
+
+    public bool IsFlashlightOff { get { return isFlashlightOff; }}
+
     public float FlashlightChargeValue
     {
         get { return flashlightValue; }
@@ -36,9 +38,15 @@ public class Flashlight : MonoBehaviour
     }
     
     public static float FlashlighMaxValue { get { return FlashlightMaxValue; }}
+    public static Flashlight Instance { get; private set; }
 
     private void Awake()
     {
+        if (Instance == null)
+            Instance = this;
+        if(Instance != this)
+            Destroy(gameObject);
+        
         flashlightValue = FlashlightMaxValue;
         spriteMask = GetComponent<SpriteMask>();
         spriteMask.alphaCutoff = 0.3f;
@@ -48,12 +56,8 @@ public class Flashlight : MonoBehaviour
 
     private void Update()
     {
-        transform.position = target.position;
+        //transform.position = target.position;
         ReduceChargeFL();
-        
-        //For test only
-        if(Input.GetKeyDown(KeyCode.R))
-            ChargeFullFlashlight();
     }
 
     public void ChargeFullFlashlight()
@@ -66,6 +70,7 @@ public class Flashlight : MonoBehaviour
         blinkColor.a = 0;
         blinkImage.color = blinkColor;
         transform.localScale = Vector2.one * FlashlightStartScaleValue;
+        GameItems.Instance.SetBatteryValue(FlashlightChargeValue);
         if(coChargeFullFlashlight != null)
             StopCoroutine(coChargeFullFlashlight);
         coChargeFullFlashlight = StartCoroutine(CoChangeChargeFlashlight());
@@ -82,7 +87,7 @@ public class Flashlight : MonoBehaviour
             isFlashlightOff = transform.localScale.x < FlashlightScaleEndValue;
             if (isFlashlightOff)
             {
-                spriteMask.gameObject.SetActive(false);
+                spriteMask.enabled = false;
                 FlashlighDead();
             }
                 
@@ -95,6 +100,7 @@ public class Flashlight : MonoBehaviour
         {
             yield return new WaitForSeconds(FlashlighPassValueTime);
             FlashlightChargeValue -= FLReduceChargeValue;
+            GameItems.Instance.SetBatteryValue(FlashlightChargeValue);
             FlashlightChangeValue(FlashlightChargeValue);
             isFlashlightFewCharge = FlashlightChargeValue <= FlashlightMinValue;
         }

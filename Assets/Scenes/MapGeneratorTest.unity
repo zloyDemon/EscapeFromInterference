@@ -121,6 +121,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 905150305}
+  - component: {fileID: 905150306}
   - component: {fileID: 905150304}
   m_Layer: 0
   m_Name: DungeonManager
@@ -147,6 +148,8 @@ MonoBehaviour:
   blackTile: {fileID: 0}
   ghostPrefab: {fileID: 8048818571050640317, guid: 5b0ae172efc597a45a7451169f2e5283,
     type: 3}
+  playerPrefab: {fileID: 3541084912052720811, guid: 8ac25a4796ee98642936538f4d9ab17e,
+    type: 3}
 --- !u!4 &905150305
 Transform:
   m_ObjectHideFlags: 0
@@ -161,6 +164,18 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &905150306
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 905150303}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f75e6910e28ba3d46821c21288787af9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1275710082
 GameObject:
   m_ObjectHideFlags: 0

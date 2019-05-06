@@ -7,6 +7,6 @@ public class EFIUtils
 
     public static float DeviceValue(float distance)
     {
-       return EFIUtils.CheckGhostDeviceMaxValue - ((distance * EFIUtils.CheckGhostDeviceMaxValue) / EFIUtils.CheckDistance);
+       return CheckGhostDeviceMaxValue - ((distance * CheckGhostDeviceMaxValue) / CheckDistance);
     }
 }

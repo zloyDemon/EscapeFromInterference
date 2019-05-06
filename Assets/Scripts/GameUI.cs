@@ -7,10 +7,12 @@ public class GameUI : MonoBehaviour
 {
     private static readonly float shakeTime = 1f;
     private static readonly float lerpSpeed = 2f;
-    
-    [SerializeField] private Text indicationText;
+
     [SerializeField] private Slider indicationsSlider;
     [SerializeField] private Slider batteryChargeSlider;
+    [SerializeField] private Text batteryCount;
+    [SerializeField] private Text keyCount;
+    [SerializeField] private Button changeBatteryBtn;
     
     private static GameUI _instance;
     private bool isIndicate = false;
@@ -30,22 +32,41 @@ public class GameUI : MonoBehaviour
             Destroy(gameObject);
 
         batteryChargeSlider.value = batteryChargeSlider.maxValue;
+        GameItems.Instance.BatteryCountChange += InstanceOnBatteryCountChange;
+        GameItems.Instance.BatteryValueChange += InstanceOnBatteryValueChange;
+        GameItems.Instance.KeyCountChange += InstanceOnKeyCountChange;
+        changeBatteryBtn.onClick.AddListener(ChangeBatteryClick);
+        InstanceOnBatteryCountChange(0);
+        InstanceOnKeyCountChange(0);
     }
-
     private void OnDestroy()
     {
-        
+        GameItems.Instance.BatteryCountChange -= InstanceOnBatteryCountChange;
+        GameItems.Instance.BatteryValueChange -= InstanceOnBatteryValueChange;
+        GameItems.Instance.KeyCountChange -= InstanceOnKeyCountChange;
     }
 
     private void Update()
     {
         ResetIndication();
     }
-
-    public void SetText(string text)
+    
+    private void InstanceOnBatteryCountChange(int value)
     {
-        indicationText.text = text;
+        batteryCount.text = string.Format("{0}", value);
     }
+    
+    private void InstanceOnBatteryValueChange(float value)
+    {
+        float res = value / Flashlight.FlashlighMaxValue;
+        batteryChargeSlider.value = res;
+    }
+    
+    private void InstanceOnKeyCountChange(int value)
+    {
+        keyCount.text = string.Format("{0}", value);
+    }
+
 
     public void SetIndication(float value)
     {
@@ -54,13 +75,6 @@ public class GameUI : MonoBehaviour
         indicationsSlider.value = toValue;
         if (value <= 0 && !isReset)
             isReset = true;
-    }
-    
-    public void FlashlightChargeChange(float value)
-    {
-        var setValue = value / Flashlight.FlashlighMaxValue;
-        setValue = Mathf.Clamp01(setValue);
-        batteryChargeSlider.value = setValue;
     }
 
     private void ResetIndication()
@@ -73,5 +87,15 @@ public class GameUI : MonoBehaviour
             if(!isReset)
                 Debug.Log("ISReset");
         }
+    }
+
+    private void ChangeBatteryClick()
+    {
+        Debug.Log("ChangeBatteryClick");
+        if (GameItems.Instance.BatteryCount > 0 && !Flashlight.Instance.IsFlashlightOff)
+        {
+            GameItems.Instance.SetBatteryCount(-1);
+            Flashlight.Instance.ChargeFullFlashlight();
+        }      
     }
 }

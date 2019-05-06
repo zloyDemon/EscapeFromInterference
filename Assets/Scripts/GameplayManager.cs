@@ -47,22 +47,34 @@ public class GameplayManager : MonoBehaviour
     public void EnemyChecked(Transform enemyTransform, Transform playerTransform)
     {
         var dist = Vector3.Distance(enemyTransform.position ,playerTransform.position);
-        GameUI.Instance.SetText(dist.ToString());
         if (!isEnemyCatch && dist < EFIUtils.DistanceForEnd)
         {
             isEnemyCatch = true;
-            if (endGameCor == null)
-                endGameCor = StartCoroutine(CoTimeForEnd());
+            EnableGameEnd(true);
         }else if (dist > EFIUtils.DistanceForEnd && !isEnd)
+        {
+            EnableGameEnd(false);
+            isEnemyCatch = false;
+        }           
+    }
+
+    private void EnableGameEnd(bool flag)
+    {
+        if (flag)
+        {
+            if (endGameCor == null)
+                endGameCor = StartCoroutine(CoTimeForEnd());    
+        }
+        
+        if (!flag)
         {
             if (endGameCor != null)
             {
                 StopCoroutine(endGameCor);
                 endGameCor = null;
-            }
-
-            isEnemyCatch = false;
-        }           
+            }    
+        }
+        
     }
 
     public void FlashlighDead()
