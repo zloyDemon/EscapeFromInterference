@@ -38,26 +38,33 @@ public class Flashlight : MonoBehaviour
     }
     
     public static float FlashlighMaxValue { get { return FlashlightMaxValue; }}
-    public static Flashlight Instance { get; private set; }
+    //public static Flashlight Instance { get; private set; }
 
     private void Awake()
     {
-        if (Instance == null)
-            Instance = this;
-        if(Instance != this)
-            Destroy(gameObject);
-        
         flashlightValue = FlashlightMaxValue;
         spriteMask = GetComponent<SpriteMask>();
         spriteMask.alphaCutoff = 0.3f;
         spriteMask.gameObject.SetActive(true);
         coChargeFullFlashlight = StartCoroutine(CoChangeChargeFlashlight());
+        GameItems.Instance.FlashlightReset += ResetFlashLightBattery;
+    }
+
+    private void OnDestroy()
+    {
+        GameItems.Instance.FlashlightReset -= ResetFlashLightBattery;
     }
 
     private void Update()
     {
         //transform.position = target.position;
         ReduceChargeFL();
+    }
+
+    private void ResetFlashLightBattery()
+    {
+        if (!IsFlashlightOff && GameItems.Instance.BatteryCount > 0)
+            ChargeFullFlashlight();
     }
 
     public void ChargeFullFlashlight()
@@ -71,6 +78,7 @@ public class Flashlight : MonoBehaviour
         blinkImage.color = blinkColor;
         transform.localScale = Vector2.one * FlashlightStartScaleValue;
         GameItems.Instance.SetBatteryValue(FlashlightChargeValue);
+        GameItems.Instance.SetBatteryCount(-1);
         if(coChargeFullFlashlight != null)
             StopCoroutine(coChargeFullFlashlight);
         coChargeFullFlashlight = StartCoroutine(CoChangeChargeFlashlight());

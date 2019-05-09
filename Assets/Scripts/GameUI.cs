@@ -35,6 +35,7 @@ public class GameUI : MonoBehaviour
         GameItems.Instance.BatteryCountChange += InstanceOnBatteryCountChange;
         GameItems.Instance.BatteryValueChange += InstanceOnBatteryValueChange;
         GameItems.Instance.KeyCountChange += InstanceOnKeyCountChange;
+        GameItems.Instance.DeviceValueChange += SetIndication;
         changeBatteryBtn.onClick.AddListener(ChangeBatteryClick);
         InstanceOnBatteryCountChange(0);
         InstanceOnKeyCountChange(0);
@@ -44,6 +45,7 @@ public class GameUI : MonoBehaviour
         GameItems.Instance.BatteryCountChange -= InstanceOnBatteryCountChange;
         GameItems.Instance.BatteryValueChange -= InstanceOnBatteryValueChange;
         GameItems.Instance.KeyCountChange -= InstanceOnKeyCountChange;
+        GameItems.Instance.DeviceValueChange -= SetIndication;
     }
 
     private void Update()
@@ -54,6 +56,7 @@ public class GameUI : MonoBehaviour
     private void InstanceOnBatteryCountChange(int value)
     {
         batteryCount.text = string.Format("{0}", value);
+        changeBatteryBtn.interactable = value > 0;
     }
     
     private void InstanceOnBatteryValueChange(float value)
@@ -92,10 +95,6 @@ public class GameUI : MonoBehaviour
     private void ChangeBatteryClick()
     {
         Debug.Log("ChangeBatteryClick");
-        if (GameItems.Instance.BatteryCount > 0 && !Flashlight.Instance.IsFlashlightOff)
-        {
-            GameItems.Instance.SetBatteryCount(-1);
-            Flashlight.Instance.ChargeFullFlashlight();
-        }      
+        GameItems.Instance.ResetFlashlight();   
     }
 }

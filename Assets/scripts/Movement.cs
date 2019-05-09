@@ -26,8 +26,6 @@ public class Movement : MonoBehaviour
     {
         rb = GetComponent<Rigidbody2D>();
         animator = GetComponent<Animator>();
-        checkEnemy = GetComponent<CheckEnemy>();
-        checkEnemy.EnemyChecked += EnemyChecked;
     }
 
     private void OnDestroy()
@@ -67,22 +65,6 @@ public class Movement : MonoBehaviour
         {
             rb.velocity = Vector2.zero;
         }
-    }
-    
-    private void EnemyChecked(GameObject[] enemies)
-    {
-        if (enemies.Length <= 0) return;
-        var nearEnemy = enemies[0];
-        var distance = Vector2.Distance(transform.position, nearEnemy.transform.position);
-        var deviceValue = EFIUtils.DeviceValue(distance);
-        if (deviceValue > EFIUtils.CheckGhostDeviceMaxValue)
-            deviceValue = EFIUtils.CheckGhostDeviceMaxValue;
-        GameUI.Instance.SetIndication(deviceValue / EFIUtils.CheckGhostDeviceMaxValue);
-        if (distance > EFIUtils.CheckDistance)
-        {
-            GameUI.Instance.SetIndication(0);
-        }
-            
     }
     
     private void FlashlightChangeValue(float value)

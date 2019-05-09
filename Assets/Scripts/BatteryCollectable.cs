@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -27,6 +28,8 @@ public class BatteryCollectable : MonoBehaviour
                     GameItems.Instance.SetBatteryCount(1);
                     Destroy(gameObject);
                     break;
+                default:
+                    throw new Exception("BatteryCollectable: Unknow collectable type");
             }
         }
     }

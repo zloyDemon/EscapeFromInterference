@@ -18,7 +18,7 @@ public class GameplayManager : MonoBehaviour
     
     public Action EndGame = () => { };
     public Action<bool> PauseGame = b => { };
-
+    
     public bool IsGamePause
     {
         set

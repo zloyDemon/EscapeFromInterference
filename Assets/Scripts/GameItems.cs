@@ -25,15 +25,18 @@ public class GameItems
     public event Action<int> BatteryCountChange = c => { }; 
     public event Action<int> KeyCountChange = c => { }; 
     public event Action<float> BatteryValueChange = c => { }; 
-    public event Action<float> DeviceValueChange = c => { }; 
+    public event Action<float> DeviceValueChange = c => { };
+    public event Action FlashlightReset = () => { };
 
     public void SetBatteryCount(int value)
     {
-        int res = batteryCount + value;
-        if (res >= 0)
+        int result = batteryCount + value;
+        if (value < 0)
+            result = 0;
+        if (result != batteryCount)
         {
-            batteryCount = res;
-            BatteryCountChange(batteryCount);    
+            batteryCount = result;
+            BatteryCountChange(batteryCount);
         }
     }
 
@@ -53,5 +56,10 @@ public class GameItems
     {
         deviceValue = value;
         DeviceValueChange(deviceValue);
+    }
+
+    public void ResetFlashlight()
+    {
+        FlashlightReset();
     }
 }
