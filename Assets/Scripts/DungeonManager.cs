@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 using Random = UnityEngine.Random;
@@ -15,13 +16,19 @@ public class DungeonManager : MonoBehaviour
     [SerializeField] Tile blackTile;
     [SerializeField] GameObject ghostPrefab;
     [SerializeField] GameObject playerPrefab;
+    [SerializeField] GameObject batteryPrefab;
+    [SerializeField] GameObject keyPrefab;
     
     private List<Vector3> availablePosition = new List<Vector3>();
+    private List<Vector3> occupPosition = new List<Vector3>();
     private int ghostsNumber;
+    private int batteryCount;
+    private int keyCount;
     private Tilemap groundTileMap;
 
     public static DungeonManager Instance { get; private set; }
     public int DungLevel { get; private set; }
+    
     public List<Vector3> AvailablePosition { get { return availablePosition; }}
     public event Action LevelLoaded = () => {};
 
@@ -34,6 +41,7 @@ public class DungeonManager : MonoBehaviour
               
         DungLevel = 1;
         ghostsNumber = 4;
+        batteryCount = 5;
     }
 
     private void Start()
@@ -53,22 +61,20 @@ public class DungeonManager : MonoBehaviour
 
         groundTileMap = tilemapGround;
         
-        for (int i = tilemapGround.cellBounds.yMin; i < tilemapGround.cellBounds.yMax; i++)
+        foreach (var position in tilemapGround.cellBounds.allPositionsWithin)
         {
-            for (int j = tilemapGround.cellBounds.xMin; j < tilemapGround.cellBounds.yMax; j++)
+            if (tilemapGround.HasTile(position))
             {
-                var localPose = new Vector3Int(i, j, 0);
-                if (tilemapGround.HasTile(localPose))
-                {
-                    var worldPosition = tilemapGround.CellToWorld(new Vector3Int(i, j, 0));
-                    worldPosition = new Vector3(worldPosition.x + 0.5f, worldPosition.y + 0.5f, 0);
-                    availablePosition.Add(worldPosition);
-                }
-            }  
+                var worldPosition = tilemapGround.CellToWorld(position);
+                worldPosition = new Vector3(worldPosition.x + 0.5f, worldPosition.y + 0.5f, 0);
+                availablePosition.Add(worldPosition);
+            }
         }
         
-        SpawnGhosts();
-        SpawnPlayer();
+        Debug.Log("Avail: " + availablePosition.Count);
+        
+        //SpawnGhosts();
+        SpawnBattery2();
     }
 
     private void BlackTiles()
@@ -86,7 +92,7 @@ public class DungeonManager : MonoBehaviour
         int spawnedGhosts = 0;
         for (var i = 0; i < availablePosition.Count; i++)
         {
-            var random = UnityEngine.Random.Range(-10, 10);
+            var random = Random.Range(-10, 10);
             bool isCanSpawn = random > 0;
             if (isCanSpawn)
             {
@@ -96,6 +102,77 @@ public class DungeonManager : MonoBehaviour
             if(spawnedGhosts >= ghostsNumber)
                 break;
         }
+    }
+
+    private void SpawnBattery()
+    {
+        int spawnedBattery = 0;
+        for (int i = 0; i < availablePosition.Count; i++)
+        {
+            int random = Random.Range(-1000, 100);
+            bool isOccup = occupPosition.Any(e => e == availablePosition[i]);
+            bool isCanSpawn = random > 0 && !isOccup;
+            Debug.Log("Battery spawn: " + isCanSpawn + " " + random);
+            if (isCanSpawn)
+            {
+                Instantiate(batteryPrefab, availablePosition[i], Quaternion.identity);
+                occupPosition.Add(availablePosition[i]);
+                spawnedBattery++;
+            }
+
+            if (spawnedBattery >= batteryCount)
+                break;
+        }
+    }
+
+    public void SpawnBattery2()
+    {
+        int spawnedObjects = 0;
+        int mid = availablePosition.Count / batteryCount;
+        int lEdge = mid - (mid / 2);
+        int rEdge = mid + (mid / 2);
+        bool isFirst = true;
+        int lastIndex = 0;
+        
+        while (spawnedObjects < batteryCount)
+        {
+            if (isFirst)
+            {
+                lastIndex = 3;
+                isFirst = false;
+            }
+            
+            int randomOffset = Random.Range(lEdge, rEdge);
+            lastIndex = lastIndex + randomOffset;
+            if (lastIndex > availablePosition.Count)
+            {
+                lastIndex = lastIndex - availablePosition.Count;
+            }
+            bool isOccup = occupPosition.Any(e => e == availablePosition[lastIndex]);
+            if (!isOccup)
+            {
+                Instantiate(batteryPrefab, availablePosition[lastIndex], Quaternion.identity);
+                occupPosition.Add(availablePosition[lastIndex]);
+                spawnedObjects++;
+            }
+            
+        }
+//        for (int i = 0; i < availablePosition.Count; i++)
+//        {
+//            int random = Random.Range(-1000, 100);
+//            bool isOccup = occupPosition.Any(e => e == availablePosition[i]);
+//            bool isCanSpawn = random > 0 && !isOccup;
+//            if (isCanSpawn)
+//            {
+//                Instantiate(batteryPrefab, availablePosition[i], Quaternion.identity);
+//                occupPosition.Add(availablePosition[i]);
+//                spawnedObjects++;
+//            }
+//            
+//            if(spawnedObjects >= batteryCount)
+//                break;
+//        }
+        Debug.Log("Occ: " + occupPosition.Count);
     }
 
     private void SpawnPlayer()
