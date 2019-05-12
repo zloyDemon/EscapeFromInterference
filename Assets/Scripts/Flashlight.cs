@@ -82,6 +82,7 @@ public class Flashlight : MonoBehaviour
         if(coChargeFullFlashlight != null)
             StopCoroutine(coChargeFullFlashlight);
         coChargeFullFlashlight = StartCoroutine(CoChangeChargeFlashlight());
+        Debug.Log("ChargeFullFlashlight");
     }
     
     private void ReduceChargeFL()

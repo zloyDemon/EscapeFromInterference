@@ -31,14 +31,15 @@ public class GameUI : MonoBehaviour
         if(_instance != this)
             Destroy(gameObject);
 
-        batteryChargeSlider.value = batteryChargeSlider.maxValue;
         GameItems.Instance.BatteryCountChange += InstanceOnBatteryCountChange;
         GameItems.Instance.BatteryValueChange += InstanceOnBatteryValueChange;
         GameItems.Instance.KeyCountChange += InstanceOnKeyCountChange;
         GameItems.Instance.DeviceValueChange += SetIndication;
         changeBatteryBtn.onClick.AddListener(ChangeBatteryClick);
+        
         InstanceOnBatteryCountChange(0);
         InstanceOnKeyCountChange(0);
+        InstanceOnBatteryValueChange(batteryChargeSlider.maxValue);
     }
     private void OnDestroy()
     {
@@ -88,7 +89,7 @@ public class GameUI : MonoBehaviour
             indicationsSlider.value = currentValue;
             isReset = currentValue > toValue;
             if(!isReset)
-                Debug.Log("ISReset");
+                Debug.Log("ISReset false");
         }
     }
 

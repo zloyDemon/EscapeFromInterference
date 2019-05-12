@@ -31,7 +31,7 @@ public class GameItems
     public void SetBatteryCount(int value)
     {
         int result = batteryCount + value;
-        if (value < 0)
+        if (result < 0)
             result = 0;
         if (result != batteryCount)
         {
