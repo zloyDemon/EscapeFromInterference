@@ -8,7 +8,12 @@ public class Gate : MonoBehaviour
     {
         if (other.CompareTag("Player"))
         {
-            Debug.Log("Gate: Player");
+            var needKey = GameplayManager.Instance.CurrentMissionInfo.NeedKey;
+            Debug.LogFormat("NeedKey {0} CurrentKeyCount {1}", needKey, GameItems.Instance.KeyCount);
+            if(GameItems.Instance.KeyCount >= needKey)
+                GameplayManager.Instance.MissionComplete();
+            else
+                SubtitleManager.Instance.SetSubtitle("I need more key for this door");
         }
     }
 }

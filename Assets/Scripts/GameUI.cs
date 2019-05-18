@@ -13,6 +13,7 @@ public class GameUI : MonoBehaviour
     [SerializeField] private Text batteryCount;
     [SerializeField] private Text keyCount;
     [SerializeField] private Button changeBatteryBtn;
+    [SerializeField] private Text subtitleText;
     
     private static GameUI _instance;
     private bool isIndicate = false;
@@ -31,27 +32,45 @@ public class GameUI : MonoBehaviour
         if(_instance != this)
             Destroy(gameObject);
 
+        batteryChargeSlider.value = batteryChargeSlider.maxValue;
+        subtitleText.text = string.Empty;
+        Debug.LogError("GameUI Awake");
+
         GameItems.Instance.BatteryCountChange += InstanceOnBatteryCountChange;
         GameItems.Instance.BatteryValueChange += InstanceOnBatteryValueChange;
         GameItems.Instance.KeyCountChange += InstanceOnKeyCountChange;
         GameItems.Instance.DeviceValueChange += SetIndication;
         changeBatteryBtn.onClick.AddListener(ChangeBatteryClick);
         
-        InstanceOnBatteryCountChange(0);
+        InstanceOnBatteryCountChange(GameItems.Instance.BatteryCount);
         InstanceOnKeyCountChange(0);
-        InstanceOnBatteryValueChange(batteryChargeSlider.maxValue);
     }
+
+    private void Start()
+    {
+        DungeonManager.Instance.LevelLoaded += InstanceOnLevelLoaded;
+        SubtitleManager.Instance.SubtitleSet += SetSubtitleText;
+        Debug.Log("GameUI Start");
+    }
+
+    private void InstanceOnLevelLoaded()
+    {
+
+    }
+
     private void OnDestroy()
     {
         GameItems.Instance.BatteryCountChange -= InstanceOnBatteryCountChange;
         GameItems.Instance.BatteryValueChange -= InstanceOnBatteryValueChange;
         GameItems.Instance.KeyCountChange -= InstanceOnKeyCountChange;
         GameItems.Instance.DeviceValueChange -= SetIndication;
+        SubtitleManager.Instance.SubtitleSet -= SetSubtitleText;
+        DungeonManager.Instance.LevelLoaded -= InstanceOnLevelLoaded;
     }
 
     private void Update()
     {
-        ResetIndication();
+        ResetIndication();          
     }
     
     private void InstanceOnBatteryCountChange(int value)
@@ -97,5 +116,10 @@ public class GameUI : MonoBehaviour
     {
         Debug.Log("ChangeBatteryClick");
         GameItems.Instance.ResetFlashlight();   
+    }
+
+    private void SetSubtitleText(string text)
+    {
+        subtitleText.text = text;
     }
 }

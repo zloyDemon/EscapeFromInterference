@@ -2,11 +2,13 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class GameplayManager : MonoBehaviour
 {
     public static readonly float TimeForEnd = 1.5f;
-    
+
+    private MissionInfo currentMissionInfo;
     private static GameplayManager instance;
     private bool isEnemyCatch;
     private bool isEnd;
@@ -29,19 +31,37 @@ public class GameplayManager : MonoBehaviour
 
         get { return isGamePause; }
     }
-    
+
+    public MissionInfo CurrentMissionInfo { get { return currentMissionInfo; } }
 
     private void Awake()
     {
         if (instance == null)
             instance = this;
-        if(instance != this)
+        if (instance != this)
             Destroy(gameObject);
+        
+        Debug.Log("Awake GameplayManager");
+        currentMissionInfo = new MissionInfo(2, 3,3);
+    }
+
+    private void Start()
+    {
+        DungeonManager.Instance.LevelLoaded += InstanceOnLevelLoaded;
+        DungeonManager.Instance.LoadLevel();
     }
 
     private void OnDestroy()
     {
-
+        DungeonManager.Instance.LevelLoaded -= InstanceOnLevelLoaded;
+    }
+    
+    private void InstanceOnLevelLoaded()
+    {
+        UIManager.Instance.FadeOut(0.8f, () =>
+        {
+            Debug.Log("Start game");
+        });
     }
 
     public void EnemyChecked(Transform enemyTransform, Transform playerTransform)
@@ -86,6 +106,16 @@ public class GameplayManager : MonoBehaviour
     {
         Time.timeScale = isPause ? 0 : 1;
         PauseGame(isPause);
+    }
+
+    public void MissionComplete()
+    {
+        UIManager.Instance.FadeIn(0.8f, () =>
+        {
+            Debug.Log("GameplayManager: MissionComplete. FadeIn");    
+            GameItems.Instance.ResetItems();
+            SceneManager.LoadScene(0);
+        });
     }
 
     //Not use yet

@@ -40,7 +40,7 @@ public class DungeonManager : MonoBehaviour
         if(Instance != this)
             Destroy(gameObject);
               
-        DungLevel = 1;
+        
         ghostsNumber = 4;
         batteryCount = 9;
         keyCount = 3;
@@ -48,7 +48,13 @@ public class DungeonManager : MonoBehaviour
 
     private void Start()
     {
-        StartCoroutine(LoadLevel());
+        DungLevel = GameplayManager.Instance.CurrentMissionInfo.MissionId;
+        batteryCount = GameplayManager.Instance.CurrentMissionInfo.BatteryCount;
+    }
+
+    public void LoadLevel()
+    {
+        StartCoroutine(CoLoadLevel());
     }
 
     private void Load()
@@ -79,7 +85,9 @@ public class DungeonManager : MonoBehaviour
         var tilemapFloor = dungeon.transform.Find("Ground").GetComponent<Tilemap>();
         var tilemapBlack = dungeon.transform.Find("Black").GetComponent<Tilemap>();
         
-        //BlackTiles(tilemapFloor, tilemapWall, tilemapBlack);
+        BlackTiles(tilemapFloor, tilemapWall, tilemapBlack);
+
+        keyCount = GameplayManager.Instance.CurrentMissionInfo.NeedKey;
         
         RandomSpawnObjects(keyPrefab, keyCount);
         RandomSpawnObjects(batteryPrefab, batteryCount);
@@ -177,9 +185,11 @@ public class DungeonManager : MonoBehaviour
         player.transform.position = spawnPosition;
     }
 
-    private IEnumerator LoadLevel()
+    private IEnumerator CoLoadLevel()
     {
         Load();
+        Debug.Log("LevelLoaded:");
+        yield return new WaitForSeconds(1);
         LevelLoaded();
         yield break;
     }

@@ -14,9 +14,10 @@ public class Flashlight : MonoBehaviour
     private const float FlashlighPassValueTime = 5f;
     private const float FlashlightReduceDuration = 0.1f;
     private const float FlashlightScaleEndValue = 0.3f;
-    private const float FlashlightStartScaleValue = 1f;
     private const float FLReduceChargeValue = 0.5f;
     private const float FLBlinkDuration = 0.15f;
+    
+    private static readonly float FlashlightStartScaleValue = 1.5f;
     
     private Transform flashlight;
     private SpriteMask spriteMask;
@@ -38,7 +39,6 @@ public class Flashlight : MonoBehaviour
     }
     
     public static float FlashlighMaxValue { get { return FlashlightMaxValue; }}
-    //public static Flashlight Instance { get; private set; }
 
     private void Awake()
     {
@@ -46,6 +46,7 @@ public class Flashlight : MonoBehaviour
         spriteMask = GetComponent<SpriteMask>();
         spriteMask.alphaCutoff = 0.3f;
         spriteMask.gameObject.SetActive(true);
+        transform.localScale = Vector2.one * FlashlightStartScaleValue;
         coChargeFullFlashlight = StartCoroutine(CoChangeChargeFlashlight());
         GameItems.Instance.FlashlightReset += ResetFlashLightBattery;
     }

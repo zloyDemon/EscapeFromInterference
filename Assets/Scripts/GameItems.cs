@@ -33,11 +33,8 @@ public class GameItems
         int result = batteryCount + value;
         if (result < 0)
             result = 0;
-        if (result != batteryCount)
-        {
-            batteryCount = result;
-            BatteryCountChange(batteryCount);
-        }
+        batteryCount = result;
+        BatteryCountChange(batteryCount);
     }
 
     public void SetKeyCount(int value)
@@ -61,5 +58,10 @@ public class GameItems
     public void ResetFlashlight()
     {
         FlashlightReset();
+    }
+
+    public void ResetItems()
+    {
+        keyCount = 0;
     }
 }

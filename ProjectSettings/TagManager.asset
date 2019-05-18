@@ -42,3 +42,12 @@ TagManager:
   - name: Default
     uniqueID: 0
     locked: 0
+  - name: MapObjects
+    uniqueID: 2772540437
+    locked: 0
+  - name: GameUI
+    uniqueID: 2636810063
+    locked: 0
+  - name: TopUI
+    uniqueID: 3782940683
+    locked: 0
