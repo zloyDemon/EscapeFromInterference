@@ -42,12 +42,12 @@ TagManager:
   - name: Default
     uniqueID: 0
     locked: 0
-  - name: MapObjects
+  - name: Dung
     uniqueID: 2772540437
     locked: 0
-  - name: GameUI
+  - name: Character
     uniqueID: 2636810063
     locked: 0
-  - name: TopUI
+  - name: UI
     uniqueID: 3782940683
     locked: 0

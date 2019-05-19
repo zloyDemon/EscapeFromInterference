@@ -18,20 +18,19 @@ public class DungeonManager : MonoBehaviour
     [SerializeField] GameObject batteryPrefab;
     [SerializeField] GameObject keyPrefab;
     
-    
     private List<Vector3> availablePosition = new List<Vector3>();
     private List<Vector3> occupPosition = new List<Vector3>();
-    private int ghostsNumber;
-    private int batteryCount;
-    private int keyCount;
     private Tilemap groundTileMap;
-    private Grid _currentPfGrid;
+    private Grid currentTileGrid;
+    private MissionInfo missionInfo;
 
     public static DungeonManager Instance { get; private set; }
-    public int DungLevel { get; private set; }
-    
+    public int DungLevel { get { return missionInfo.Level; }}
     public List<Vector3> AvailablePosition { get { return availablePosition; }}
+    public MissionInfo CurrentMissionInfo { get { return missionInfo; }}
     public event Action LevelLoaded = () => {};
+    public Vector3 WPosition { get; private set; }
+    public Vector3 Size { get; private set; }
 
     private void Awake()
     {
@@ -39,17 +38,9 @@ public class DungeonManager : MonoBehaviour
             Instance = this;
         if(Instance != this)
             Destroy(gameObject);
-              
-        
-        ghostsNumber = 4;
-        batteryCount = 9;
-        keyCount = 3;
-    }
 
-    private void Start()
-    {
-        DungLevel = GameplayManager.Instance.CurrentMissionInfo.MissionId;
-        batteryCount = GameplayManager.Instance.CurrentMissionInfo.BatteryCount;
+        var missionId = GameConfig.Instance.Level;
+        missionInfo = new MissionInfo(missionId,3,5,3);
     }
 
     public void LoadLevel()
@@ -59,10 +50,10 @@ public class DungeonManager : MonoBehaviour
 
     private void Load()
     {
-        string path = string.Format(LevelPrefix, DungLevel);
+        string path = string.Format(LevelPrefix, missionInfo.MissionId);
         var loadGrid = Resources.Load<Grid>(path);
         Grid dungeon = Instantiate(loadGrid, Vector3.zero, Quaternion.identity, dungeonParent.transform);
-        _currentPfGrid = dungeon;
+        currentTileGrid = dungeon;
         
         var tilemapGround = dungeon.transform.Find("Ground").GetComponent<Tilemap>();
         
@@ -86,22 +77,29 @@ public class DungeonManager : MonoBehaviour
         var tilemapBlack = dungeon.transform.Find("Black").GetComponent<Tilemap>();
         
         BlackTiles(tilemapFloor, tilemapWall, tilemapBlack);
-
-        keyCount = GameplayManager.Instance.CurrentMissionInfo.NeedKey;
         
-        RandomSpawnObjects(keyPrefab, keyCount);
-        RandomSpawnObjects(batteryPrefab, batteryCount);
+        RandomSpawnObjects(keyPrefab, missionInfo.NeedKey);
+        RandomSpawnObjects(batteryPrefab, missionInfo.BatteryCount);
         SpawnPlayer();
+
+        var dungPos = tilemapWall.GetCellCenterWorld(tilemapWall.cellBounds.position);
         
-        Debug.Log("MapSize: " + tilemapWall.cellBounds.xMin + " " + tilemapWall.cellBounds.xMax);
+        Size = tilemapWall.cellBounds.size;
+        WPosition = new Vector3(Mathf.FloorToInt(dungPos.x + (Size.x / 2)), Mathf.FloorToInt(dungPos.y + (Size.y / 2)), dungPos.z);
+        WPosition = tilemapWall.cellBounds.center;
+
+        Debug.Log("MapSize: " + tilemapWall.CellToWorld(tilemapWall.cellBounds.position) + " " + tilemapWall.size + " " + tilemapWall.cellBounds.center);
     }
 
     private void BlackTiles(Tilemap tilemapFloor, Tilemap tilemapWall, Tilemap tilemapBlack)
     {
         foreach (var tilePosition in tilemapWall.cellBounds.allPositionsWithin)
-            tilemapBlack.SetTile(tilePosition, blackTile);
+            if(tilemapWall.HasTile(tilePosition))
+                tilemapBlack.SetTile(tilePosition, blackTile);
+        
         foreach (var tilePosition in tilemapFloor.cellBounds.allPositionsWithin)
-            tilemapBlack.SetTile(tilePosition, blackTile);
+            if(tilemapFloor.HasTile(tilePosition))
+                tilemapBlack.SetTile(tilePosition, blackTile);
     }
 
     private void SpawnGhosts()
@@ -118,7 +116,7 @@ public class DungeonManager : MonoBehaviour
                 Instantiate(ghostPrefab, availablePosition[i], Quaternion.identity);
                 spawnedGhosts++;
             }
-            if(spawnedGhosts >= ghostsNumber)
+            if(spawnedGhosts >= missionInfo.GhostCount)
                 break;
         }
     }
@@ -139,7 +137,7 @@ public class DungeonManager : MonoBehaviour
                 spawnedBattery++;
             }
 
-            if (spawnedBattery >= batteryCount)
+            if (spawnedBattery >= missionInfo.BatteryCount)
                 break;
         }
     }
@@ -179,7 +177,7 @@ public class DungeonManager : MonoBehaviour
     private void SpawnPlayer()
     {
         int index = Random.Range(0, AvailablePosition.Count);
-        var ps = _currentPfGrid.transform.Find("PlayerSpawnPos");
+        var ps = currentTileGrid.transform.Find("PlayerSpawnPos");
         var spawnPosition = ps.position;
         var player = Instantiate(playerPrefab);
         player.transform.position = spawnPosition;
@@ -191,8 +189,5 @@ public class DungeonManager : MonoBehaviour
         Debug.Log("LevelLoaded:");
         yield return new WaitForSeconds(1);
         LevelLoaded();
-        yield break;
     }
-    
-    
 }

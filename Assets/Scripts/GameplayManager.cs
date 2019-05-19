@@ -42,7 +42,6 @@ public class GameplayManager : MonoBehaviour
             Destroy(gameObject);
         
         Debug.Log("Awake GameplayManager");
-        currentMissionInfo = new MissionInfo(2, 3,3);
     }
 
     private void Start()
@@ -60,7 +59,7 @@ public class GameplayManager : MonoBehaviour
     {
         UIManager.Instance.FadeOut(0.8f, () =>
         {
-            Debug.Log("Start game");
+            currentMissionInfo = DungeonManager.Instance.CurrentMissionInfo;
         });
     }
 

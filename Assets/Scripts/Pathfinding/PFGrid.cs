@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using pathfinding;
 using UnityEngine;
 
@@ -22,9 +23,7 @@ public class PFGrid : MonoBehaviour
 
     private void Awake()
     {
-        nodeDiameter = nodeRadius * 2;
-        gridSizeX = Mathf.RoundToInt(worldGridSize.x / nodeDiameter);
-        gridSizeY = Mathf.RoundToInt(worldGridSize.y / nodeDiameter);
+        
         
     }
 
@@ -40,6 +39,11 @@ public class PFGrid : MonoBehaviour
 
     private void LevelLoaded()
     {
+        transform.position = DungeonManager.Instance.WPosition;
+        worldGridSize = DungeonManager.Instance.Size;
+        nodeDiameter = nodeRadius * 2;
+        gridSizeX = Mathf.RoundToInt(worldGridSize.x / nodeDiameter);
+        gridSizeY = Mathf.RoundToInt(worldGridSize.y / nodeDiameter);
         CreateGrid();
     }
 
@@ -55,8 +59,9 @@ public class PFGrid : MonoBehaviour
             {
                 Vector2 point = worldBootomLeft + Vector2.right * (x * nodeDiameter + nodeRadius) +
                                 Vector2.up * (y * nodeDiameter + nodeRadius);
-                bool isWalkable = !Physics2D.OverlapCircle(point, nodeRadius, mask.value);
-                nodeGrid[x, y] = new Node(point, isWalkable,x,y);
+                
+                bool isWalkable = !Physics2D.OverlapCircle(point, nodeRadius - 0.1f, mask.value);
+                nodeGrid[x, y] = new Node(point, isWalkable, x, y);
             }
         }
     }

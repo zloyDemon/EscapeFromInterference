@@ -44,7 +44,6 @@ public class UIManager : MonoBehaviour
         for (float i = 1; i > 0; i -= Time.deltaTime * duration)
         {
             fadeImage.alpha = i;
-            Debug.Log("Value: " + i);
             yield return null;
         }
 
