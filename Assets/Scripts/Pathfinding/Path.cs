@@ -41,10 +41,15 @@ namespace Pathfinding
 
         public void DrawWithGizmos()
         {
-            Gizmos.color = Color.black;
+            Gizmos.color = Color.blue;
             foreach (var p in lookPoints)
             {
-                Gizmos.DrawCube(p, Vector2.one);
+                //Gizmos.DrawCube(p, Vector2.one * 0.23f*2f);
+            }
+
+            for (int i = 0; i < lookPoints.Length - 1; i++)
+            {
+                Gizmos.DrawLine(lookPoints[i], lookPoints[i+1]);
             }
             
             Gizmos.color = Color.white;

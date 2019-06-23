@@ -17,7 +17,7 @@ public class CheckEnemy : MonoBehaviour
     
     [SerializeField] private string enemyTag;
 
-    public Action<GameObject[]> EnemyChecked = g => { };
+    public event Action<GameObject[]> EnemyChecked = g => { };
     public CheckTargetType TargetType = CheckTargetType.None;
 
     private void Update()

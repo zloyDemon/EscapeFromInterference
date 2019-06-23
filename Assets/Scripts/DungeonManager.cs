@@ -12,16 +12,15 @@ public class DungeonManager : MonoBehaviour
 
     [SerializeField] GameObject dungeonParent;
     [SerializeField] GameObject itemsParent;
-    [SerializeField] Tile blackTile;
+    [SerializeField] GameObject pointsParent;
     [SerializeField] GameObject ghostPrefab;
     [SerializeField] GameObject playerPrefab;
     [SerializeField] GameObject batteryPrefab;
     [SerializeField] GameObject keyPrefab;
+    [SerializeField] Tile blackTile;
     
     private List<Vector3> availablePosition = new List<Vector3>();
     private List<Vector3> occupPosition = new List<Vector3>();
-    private Tilemap groundTileMap;
-    private Grid currentTileGrid;
     private MissionInfo missionInfo;
 
     public static DungeonManager Instance { get; private set; }
@@ -53,14 +52,21 @@ public class DungeonManager : MonoBehaviour
         string path = string.Format(LevelPrefix, missionInfo.MissionId);
         var loadGrid = Resources.Load<Grid>(path);
         Grid dungeon = Instantiate(loadGrid, Vector3.zero, Quaternion.identity, dungeonParent.transform);
-        currentTileGrid = dungeon;
-        
-        var tilemapGround = dungeon.transform.Find("Ground").GetComponent<Tilemap>();
-        
-        if(tilemapGround == null)
-            throw new Exception("Ground tilemap not founded");
 
-        groundTileMap = tilemapGround;
+        if (dungeon == null)
+            throw new Exception("Dungeon grid don't load from resource");
+            
+        var tilemapGround = dungeon.transform.Find("Ground").GetComponent<Tilemap>();
+        var tilemapWall = dungeon.transform.Find("Wall").GetComponent<Tilemap>();
+        var tilemapBlack = dungeon.transform.Find("Black").GetComponent<Tilemap>();
+        
+        Size = tilemapWall.cellBounds.size;
+        var center = tilemapWall.cellBounds.center;
+        
+        Vector3 newDungPosition = new Vector3(dungeon.transform.position.x - center.x, dungeon.transform.position.y - center.y, 0);
+        dungeon.transform.position = newDungPosition;
+        
+        WPosition = tilemapWall.cellBounds.center;
         
         foreach (var position in tilemapGround.cellBounds.allPositionsWithin)
         {
@@ -68,25 +74,19 @@ public class DungeonManager : MonoBehaviour
             {
                 var worldPosition = tilemapGround.CellToWorld(position);
                 worldPosition = new Vector3(worldPosition.x + 0.5f, worldPosition.y + 0.5f, -1);
-                availablePosition.Add(worldPosition);
+                AvailablePosition.Add(worldPosition);
             }
         }
-
-        var tilemapWall = dungeon.transform.Find("Wall").GetComponent<Tilemap>();
-        var tilemapFloor = dungeon.transform.Find("Ground").GetComponent<Tilemap>();
-        var tilemapBlack = dungeon.transform.Find("Black").GetComponent<Tilemap>();
         
-        BlackTiles(tilemapFloor, tilemapWall, tilemapBlack);
+        var ps = dungeon.transform.Find("PlayerSpawnPos");
         
-        RandomSpawnObjects(keyPrefab, missionInfo.NeedKey);
-        RandomSpawnObjects(batteryPrefab, missionInfo.BatteryCount);
-        SpawnPlayer();
-
-        var dungPos = tilemapWall.GetCellCenterWorld(tilemapWall.cellBounds.position);
+        //TODO For testing
+        //BlackTiles(tilemapGround, tilemapWall, tilemapBlack);
         
-        Size = tilemapWall.cellBounds.size;
-        WPosition = new Vector3(Mathf.FloorToInt(dungPos.x + (Size.x / 2)), Mathf.FloorToInt(dungPos.y + (Size.y / 2)), dungPos.z);
-        WPosition = tilemapWall.cellBounds.center;
+        RandomSpawnObjects(keyPrefab, itemsParent.transform, missionInfo.NeedKey);
+        RandomSpawnObjects(batteryPrefab,itemsParent.transform, missionInfo.BatteryCount);
+        var player = SpawnPlayer(ps.position);
+        SpawnGhosts(player.transform);
 
         Debug.Log("MapSize: " + tilemapWall.CellToWorld(tilemapWall.cellBounds.position) + " " + tilemapWall.size + " " + tilemapWall.cellBounds.center);
     }
@@ -102,92 +102,68 @@ public class DungeonManager : MonoBehaviour
                 tilemapBlack.SetTile(tilePosition, blackTile);
     }
 
-    private void SpawnGhosts()
-    {
-        if (availablePosition == null || availablePosition.Count == 0)
-            return;
-        int spawnedGhosts = 0;
-        for (var i = 0; i < availablePosition.Count; i++)
-        {
-            var random = Random.Range(-10, 10);
-            bool isCanSpawn = random > 0;
-            if (isCanSpawn)
-            {
-                Instantiate(ghostPrefab, availablePosition[i], Quaternion.identity);
-                spawnedGhosts++;
-            }
-            if(spawnedGhosts >= missionInfo.GhostCount)
-                break;
-        }
-    }
-
-    private void SpawnBattery()
-    {
-        int spawnedBattery = 0;
-        for (int i = 0; i < availablePosition.Count; i++)
-        {
-            int random = Random.Range(-1000, 100);
-            bool isOccup = occupPosition.Any(e => e == availablePosition[i]);
-            bool isCanSpawn = random > 0 && !isOccup;
-            Debug.Log("Battery spawn: " + isCanSpawn + " " + random);
-            if (isCanSpawn)
-            {
-                Instantiate(batteryPrefab, availablePosition[i], Quaternion.identity);
-                occupPosition.Add(availablePosition[i]);
-                spawnedBattery++;
-            }
-
-            if (spawnedBattery >= missionInfo.BatteryCount)
-                break;
-        }
-    }
-
-    public void RandomSpawnObjects(GameObject prefab, int maxCount)
+    private List<GameObject> RandomSpawnObjects(GameObject prefab, Transform parent, int maxCount, bool ignoreOccup = false)
     {
         int spawnedObjects = 0;
-        int mid = availablePosition.Count / maxCount;
+        int mid = AvailablePosition.Count / maxCount;
         int lEdge = mid - (mid / 2);
         int rEdge = mid + (mid / 2);
         bool isFirst = true;
         int lastIndex = 0;
+        List<GameObject> result = new List<GameObject>();
         
         while (spawnedObjects < maxCount)
         {
             if (isFirst)
             {
-                lastIndex = Random.Range(0, availablePosition.Count - 1);
+                lastIndex = Random.Range(0, AvailablePosition.Count - 1);
                 isFirst = false;
             }
-            
+
+            var currentAvailablePosition = AvailablePosition[lastIndex];
             int randomOffset = Random.Range(lEdge, rEdge);
             lastIndex = lastIndex + randomOffset;
-            if (lastIndex >= availablePosition.Count)
-                lastIndex = lastIndex - availablePosition.Count;
+            if (lastIndex >= AvailablePosition.Count)
+                lastIndex = lastIndex - AvailablePosition.Count;
             
-            bool isOccup = occupPosition.Any(e => e == availablePosition[lastIndex]);
-            if (!isOccup)
+            bool isOccup = occupPosition.Any(e => e == currentAvailablePosition);
+            if (!isOccup || ignoreOccup)
             {
-                Instantiate(prefab, availablePosition[lastIndex], Quaternion.identity, itemsParent.transform);
-                occupPosition.Add(availablePosition[lastIndex]);
+                var createdObj = Instantiate(prefab, currentAvailablePosition, Quaternion.identity, parent);
+                occupPosition.Add(currentAvailablePosition);
+                result.Add(createdObj);
                 spawnedObjects++;
             }
         }
+
+        return result;
     }
 
-    private void SpawnPlayer()
+    private GameObject SpawnPlayer(Vector3 spawnPosition)
     {
-        int index = Random.Range(0, AvailablePosition.Count);
-        var ps = currentTileGrid.transform.Find("PlayerSpawnPos");
-        var spawnPosition = ps.position;
         var player = Instantiate(playerPrefab);
         player.transform.position = spawnPosition;
+        return player.gameObject;
+    }
+
+    private void SpawnGhosts(Transform targetPlayer)
+    {
+        GameObject patrolPoint = new GameObject("PatrolPoint");
+        var points = RandomSpawnObjects(patrolPoint, pointsParent.transform, 3, true);
+        foreach (var point in points)
+        {
+            var ghost = Instantiate(ghostPrefab, point.transform.position, Quaternion.identity);
+            var ghostScript = ghost.GetComponent<Ghost>();
+            ghostScript.PatrolPoints = points.ToArray();
+            ghostScript.Target = targetPlayer.transform;
+        }
     }
 
     private IEnumerator CoLoadLevel()
     {
         Load();
-        Debug.Log("LevelLoaded:");
         yield return new WaitForSeconds(1);
+        Debug.Log("LevelLoaded: " + CurrentMissionInfo.MissionId);
         LevelLoaded();
     }
 }

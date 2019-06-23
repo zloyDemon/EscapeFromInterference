@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using pathfinding;
@@ -15,6 +16,8 @@ public class PFGrid : MonoBehaviour
     private float nodeDiameter;
     private int gridSizeX, gridSizeY;
     private Node[,] nodeGrid;
+
+    public event Action GridCreated = () => { };
 
     public int MaxSize
     {
@@ -37,9 +40,16 @@ public class PFGrid : MonoBehaviour
         DungeonManager.Instance.LevelLoaded += LevelLoaded;
     }
 
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.Q))
+        {
+            LevelLoaded();
+        }
+    }
+
     private void LevelLoaded()
     {
-        transform.position = DungeonManager.Instance.WPosition;
         worldGridSize = DungeonManager.Instance.Size;
         nodeDiameter = nodeRadius * 2;
         gridSizeX = Mathf.RoundToInt(worldGridSize.x / nodeDiameter);
@@ -64,6 +74,8 @@ public class PFGrid : MonoBehaviour
                 nodeGrid[x, y] = new Node(point, isWalkable, x, y);
             }
         }
+
+        GridCreated();
     }
 
     public List<Node> GetNeighboursNode(Node node)
@@ -89,11 +101,12 @@ public class PFGrid : MonoBehaviour
 
     public Node NodeFromWorldPosition(Vector2 position)
     {
+        
         float perX = (position.x + worldGridSize.x / 2) / worldGridSize.x;
         float perY = (position.y + worldGridSize.y / 2) / worldGridSize.y;
         perX = Mathf.Clamp01(perX);
         perY = Mathf.Clamp01(perY);
-
+        
         int x = Mathf.RoundToInt((gridSizeX - 1) * perX);
         int y = Mathf.RoundToInt((gridSizeY - 1) * perY);
         return nodeGrid[x, y];

@@ -11,6 +11,10 @@ public class PathRequestManager : MonoBehaviour
 	private static PathRequestManager instance;
 	Pathfinder pathFinding;
 	
+	public PFGrid PfGrid { get { return pathFinding.PfGrid; }}
+
+	public static PathRequestManager Instance { get { return instance; }}
+
 	private void Awake()
 	{
 		instance = this;

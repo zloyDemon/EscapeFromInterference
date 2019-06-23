@@ -191,6 +191,36 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 52339970}
   m_CullTransparentMesh: 0
+--- !u!1 &141752407
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 141752408}
+  m_Layer: 0
+  m_Name: PointsParent
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &141752408
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 141752407}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 1424216922}
+  m_RootOrder: 1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &244277536
 GameObject:
   m_ObjectHideFlags: 0
@@ -398,7 +428,7 @@ GameObject:
   m_Component:
   - component: {fileID: 479364455}
   m_Layer: 0
-  m_Name: Items
+  m_Name: ItemsParent
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -411,12 +441,12 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 479364454}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
-  m_Father: {fileID: 0}
-  m_RootOrder: 4
+  m_Father: {fileID: 1424216922}
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &566072181
 GameObject:
@@ -447,7 +477,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 63757194877ffbc4299c49e81a00e0cb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  level: 2
+  level: 1
   batteryCount: 0
 --- !u!4 &566072183
 Transform:
@@ -461,7 +491,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 8
+  m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &782175991
 GameObject:
@@ -510,7 +540,7 @@ MonoBehaviour:
   mask:
     serializedVersion: 2
     m_Bits: 256
-  worldGridSize: {x: 1, y: 1}
+  worldGridSize: {x: 23, y: 23}
   nodeRadius: 0.25
 --- !u!114 &782175994
 MonoBehaviour:
@@ -631,7 +661,7 @@ RectTransform:
   - {fileID: 2032575275}
   - {fileID: 1126509049}
   m_Father: {fileID: 0}
-  m_RootOrder: 6
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
@@ -671,6 +701,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   dungeonParent: {fileID: 1424216921}
   itemsParent: {fileID: 479364454}
+  pointsParent: {fileID: 141752407}
   blackTile: {fileID: 11400000, guid: 007a2e0ee1078ef4ea9ab65cbdd4916c, type: 2}
   ghostPrefab: {fileID: 8048818571050640317, guid: 5b0ae172efc597a45a7451169f2e5283,
     type: 3}
@@ -1127,9 +1158,11 @@ Transform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
+  m_Children:
+  - {fileID: 479364455}
+  - {fileID: 141752408}
   m_Father: {fileID: 0}
-  m_RootOrder: 5
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1721310209
 GameObject:
@@ -1195,7 +1228,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 3
+  m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &1958207625
 PrefabInstance:
@@ -1466,7 +1499,7 @@ PrefabInstance:
     - target: {fileID: 9057066714920162775, guid: 5f8d289ef4bbcbe41991b869e6d9a320,
         type: 3}
       propertyPath: m_RootOrder
-      value: 7
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 9057066714920162775, guid: 5f8d289ef4bbcbe41991b869e6d9a320,
         type: 3}

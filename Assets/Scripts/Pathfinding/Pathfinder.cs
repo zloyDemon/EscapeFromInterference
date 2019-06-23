@@ -9,6 +9,8 @@ public class Pathfinder : MonoBehaviour
 {
     private PFGrid _pfGrid;
 
+    public PFGrid PfGrid { get { return _pfGrid; }}
+
     private void Awake()
     {
         _pfGrid = GetComponent<PFGrid>();
@@ -22,12 +24,14 @@ public class Pathfinder : MonoBehaviour
         Node startNode = _pfGrid.NodeFromWorldPosition(request.pathStart);
         Node targetNode = _pfGrid.NodeFromWorldPosition(request.pathEnd);
 
+        Debug.Log("Start: " + startNode.worldPosition + " end " + targetNode.worldPosition + " " + PfGrid.MaxSize);
+        
         if (startNode.isWalkable && targetNode.isWalkable)
         {
             Heap<Node> openSet = new Heap<Node>(_pfGrid.MaxSize);
             List<Node> closedSet = new List<Node>();
             openSet.Add(startNode);
-
+            
             while (openSet.Count > 0)
             {
                 Node currentNode = openSet.RemoveFirst();
@@ -62,7 +66,7 @@ public class Pathfinder : MonoBehaviour
                 }
             }
         }
-
+        
         if (pathSuccess)
         {
             wayPoints = RetracePath(startNode, targetNode);
@@ -82,7 +86,6 @@ public class Pathfinder : MonoBehaviour
             currentNode = currentNode.parent;
         }
 
-//        Vector2[] wayPoints = SimplifyPath(path);
         List<Vector2> list = new List<Vector2>();
         bool flag = true;
         foreach (var node in path)

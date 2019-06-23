@@ -69,8 +69,8 @@ namespace pathfinding
         {
             Vector2 lineDir = new Vector2(1, gradient).normalized;
             Vector2 lineCentre = new Vector2(pointOnLine_1.x, pointOnLine_1.y);
-            Gizmos.DrawCube(lineCentre, Vector3.one);
-            Gizmos.DrawLine(lineCentre - lineDir * lenght / 2f, lineCentre + lineDir * lenght / 2f);
+            //Gizmos.DrawCube(lineCentre, Vector3.one);
+            //Gizmos.DrawLine(lineCentre - lineDir * lenght / 2f, lineCentre + lineDir * lenght / 2f);
         }
     }
 }

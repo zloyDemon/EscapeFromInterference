@@ -34,7 +34,6 @@ public class GameUI : MonoBehaviour
 
         batteryChargeSlider.value = batteryChargeSlider.maxValue;
         subtitleText.text = string.Empty;
-        Debug.LogError("GameUI Awake");
 
         GameItems.Instance.BatteryCountChange += InstanceOnBatteryCountChange;
         GameItems.Instance.BatteryValueChange += InstanceOnBatteryValueChange;

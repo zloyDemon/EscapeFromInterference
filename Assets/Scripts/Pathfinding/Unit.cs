@@ -17,18 +17,33 @@ public class Unit : MonoBehaviour
 
 	private void Awake()
 	{
-		
+		PathRequestManager.Instance.PfGrid.GridCreated += InstanceOnLevelLoaded;
 	}
+
+	
 
 	private void Start()
 	{
+		
+	}
+
+	private void OnDestroy()
+	{
+		PathRequestManager.Instance.PfGrid.GridCreated -= InstanceOnLevelLoaded;
+	}
+
+	private void InstanceOnLevelLoaded()
+	{
+		Debug.Log("Level loaded Unit");
 		StartCoroutine(UpdatePath());
 	}
 
 	public void OnPathFound(Vector2[] wayPoints, bool pathSuccessful)
 	{
+		Debug.Log("Path founded: " + wayPoints.Length + " " + pathSuccessful);
 		if (pathSuccessful)
 		{
+			
 			path = new Path(wayPoints, transform.position,turnDst, stoppingDist);
 			StopCoroutine("FollowPath");
 			StartCoroutine("FollowPath");
@@ -60,7 +75,7 @@ public class Unit : MonoBehaviour
 	{
 		bool folowingPath = true;
 		int pathIndex = 0;
-
+		
 		float speedPercent = 1;
 		while (folowingPath)
 		{

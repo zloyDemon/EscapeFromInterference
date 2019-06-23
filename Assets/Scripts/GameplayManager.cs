@@ -18,6 +18,8 @@ public class GameplayManager : MonoBehaviour
     
     public static GameplayManager Instance { get { return instance; } }
     
+    public Transform Player { get; set; }
+    
     public Action EndGame = () => { };
     public Action<bool> PauseGame = b => { };
     
