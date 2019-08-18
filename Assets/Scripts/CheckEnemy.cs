@@ -15,11 +15,15 @@ public class CheckEnemy : MonoBehaviour
         Ghost,
     }
     
-    [SerializeField] private string enemyTag;
-
+    private CheckTargetType TargetType;
+    public List<GameObject> Enemies { get; private set; }
     public event Action<GameObject[]> EnemyChecked = g => { };
-    public CheckTargetType TargetType = CheckTargetType.None;
 
+    public void Init(CheckTargetType enemyType)
+    {
+        TargetType = enemyType;
+    }
+    
     private void Update()
     {
         Check();
@@ -28,12 +32,32 @@ public class CheckEnemy : MonoBehaviour
     private void Check()
     {
         if (TargetType == CheckTargetType.None) return;
-        var colliders = Physics2D.OverlapCircleAll(transform.position, CheckRadius);
-        var enemies = GetEnemiesArrayByTag(colliders);
+        Enemies = GetEnemies(TargetType);
+        var enemies = GetEnemiesArrayByTag(Enemies);
         EnemyChecked(enemies.ToArray());    
     }
 
-    private List<GameObject> GetEnemiesArrayByTag(Collider2D[] enemies)
+
+    private List<GameObject> GetEnemies(CheckTargetType type)
+    {
+        List<GameObject> result = new List<GameObject>();
+        switch (type)
+        {
+            case CheckTargetType.Ghost:
+                result = GameplayManager.Instance.GhostOnMap;
+                break;
+            case CheckTargetType.Player:
+                var player = GameplayManager.Instance.Player;
+                result.Add(player.gameObject);
+                break;
+            default:
+                throw new Exception("CheckEnemy: Type not defined");
+        }
+
+        return result;
+    }
+
+    private List<GameObject> GetEnemiesArrayByTag(List<GameObject> enemies)
     {
         List<GameObject> list = new List<GameObject>();
         foreach (var enemy in enemies)

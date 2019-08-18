@@ -81,12 +81,17 @@ public class DungeonManager : MonoBehaviour
         var ps = dungeon.transform.Find("PlayerSpawnPos");
         
         //TODO For testing
-        //BlackTiles(tilemapGround, tilemapWall, tilemapBlack);
+        BlackTiles(tilemapGround, tilemapWall, tilemapBlack);
         
         RandomSpawnObjects(keyPrefab, itemsParent.transform, missionInfo.NeedKey);
         RandomSpawnObjects(batteryPrefab,itemsParent.transform, missionInfo.BatteryCount);
         var player = SpawnPlayer(ps.position);
-        SpawnGhosts(player.transform);
+        
+        var patrolPointsParent = dungeon.transform.Find("PatrolPoints");
+        List<GameObject> patrolPointsForGhost = new List<GameObject>();
+        for (int i = 0; i < patrolPointsParent.childCount; i++)
+            patrolPointsForGhost.Add(patrolPointsParent.GetChild(i).gameObject);
+        SpawnGhosts(player.transform, patrolPointsForGhost);
 
         Debug.Log("MapSize: " + tilemapWall.CellToWorld(tilemapWall.cellBounds.position) + " " + tilemapWall.size + " " + tilemapWall.cellBounds.center);
     }
@@ -146,23 +151,27 @@ public class DungeonManager : MonoBehaviour
         return player.gameObject;
     }
 
-    private void SpawnGhosts(Transform targetPlayer)
+    private void SpawnGhosts(Transform targetPlayer, List<GameObject> patrolPoints)
     {
         GameObject patrolPoint = new GameObject("PatrolPoint");
-        var points = RandomSpawnObjects(patrolPoint, pointsParent.transform, 3, true);
+        List<GameObject> ghosts = new List<GameObject>();
+        var points = patrolPoints;
         foreach (var point in points)
         {
             var ghost = Instantiate(ghostPrefab, point.transform.position, Quaternion.identity);
             var ghostScript = ghost.GetComponent<Ghost>();
-            ghostScript.PatrolPoints = points.ToArray();
+            ghostScript.PatrolPoints = patrolPoints.ToArray();
             ghostScript.Target = targetPlayer.transform;
+            ghosts.Add(ghost);
         }
+
+        GameplayManager.Instance.GhostOnMap = ghosts;
     }
 
     private IEnumerator CoLoadLevel()
     {
         Load();
-        yield return new WaitForSeconds(1);
+        yield return new WaitForEndOfFrame();
         Debug.Log("LevelLoaded: " + CurrentMissionInfo.MissionId);
         LevelLoaded();
     }

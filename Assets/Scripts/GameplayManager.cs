@@ -6,22 +6,25 @@ using UnityEngine.SceneManagement;
 
 public class GameplayManager : MonoBehaviour
 {
-    public static readonly float TimeForEnd = 1.5f;
+    public static readonly float TimeForEnd = 1f;
 
     private MissionInfo currentMissionInfo;
     private static GameplayManager instance;
     private bool isEnemyCatch;
     private bool isEnd;
-    private Coroutine endGameCor;
+    private Coroutine corEndGame;
     private bool isGamePause;
     private float checkGhostDeviceValue;
     
-    public static GameplayManager Instance { get { return instance; } }
-    
+    public static GameplayManager Instance => instance;
+
     public Transform Player { get; set; }
+
+    public List<GameObject> GhostOnMap { get; set; }
     
-    public Action EndGame = () => { };
-    public Action<bool> PauseGame = b => { };
+    public event Action EndGame = () => { };
+    public event Action<bool> PauseGame = b => { };
+    public event Action<bool> StartFallGame = b => { };
     
     public bool IsGamePause
     {
@@ -52,6 +55,18 @@ public class GameplayManager : MonoBehaviour
         DungeonManager.Instance.LoadLevel();
     }
 
+    private bool isPause;
+    
+    private void Update()
+    {
+        if (Input.GetKey(KeyCode.P))
+        {
+            GamePause(isPause);
+            isPause = !isPause;
+        }
+            
+    }
+
     private void OnDestroy()
     {
         DungeonManager.Instance.LevelLoaded -= InstanceOnLevelLoaded;
@@ -65,38 +80,6 @@ public class GameplayManager : MonoBehaviour
         });
     }
 
-    public void EnemyChecked(Transform enemyTransform, Transform playerTransform)
-    {
-        var dist = Vector3.Distance(enemyTransform.position ,playerTransform.position);
-        if (!isEnemyCatch && dist < EFIUtils.DistanceForEnd)
-        {
-            isEnemyCatch = true;
-            EnableGameEnd(true);
-        }else if (dist > EFIUtils.DistanceForEnd && !isEnd)
-        {
-            EnableGameEnd(false);
-            isEnemyCatch = false;
-        }           
-    }
-
-    private void EnableGameEnd(bool flag)
-    {
-        if (flag)
-        {
-            if (endGameCor == null)
-                endGameCor = StartCoroutine(CoTimeForEnd());    
-        }
-        
-        if (!flag)
-        {
-            if (endGameCor != null)
-            {
-                StopCoroutine(endGameCor);
-                endGameCor = null;
-            }    
-        }
-        
-    }
 
     public void FlashlighDead()
     {
@@ -106,6 +89,7 @@ public class GameplayManager : MonoBehaviour
     private void GamePause(bool isPause)
     {
         Time.timeScale = isPause ? 0 : 1;
+      
         PauseGame(isPause);
     }
 
@@ -119,20 +103,21 @@ public class GameplayManager : MonoBehaviour
         });
     }
 
-    //Not use yet
-    private void GameEnd(bool isEnd)
+    public void FallingLevel(bool isFalling)
     {
-        if (isEnd && endGameCor == null)
-        {
-            endGameCor = StartCoroutine(CoTimeForEnd());
-        }
+        StartFallGame(isFalling);
     }
 
-    private IEnumerator CoTimeForEnd()
+    public void StartEndGame()
+    {
+        StartCoroutine(FallingGame());
+    }
+
+    private IEnumerator FallingGame()
     {
         yield return new WaitForSeconds(TimeForEnd);
-        Debug.Log("Game end");
-        isEnd = true;
         EndGame();
     }
+    
+    
 }

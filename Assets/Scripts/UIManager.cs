@@ -12,17 +12,10 @@ public class UIManager : MonoBehaviour
     private void Awake()
     {
         if (Instance == null)
-        {
             Instance = this;
-            Debug.LogError("Instance UIManger");
-        }
-            
+
         if (Instance != this)
-        {
             Destroy(gameObject);
-            Debug.LogError("Destroy UIManger");
-        }
-            
         
         DontDestroyOnLoad(gameObject);
         fadeImage.gameObject.SetActive(true);
@@ -62,6 +55,5 @@ public class UIManager : MonoBehaviour
 
         fadeImage.alpha = 1;
         fadeImage.GetComponent<Image>().raycastTarget = false;
-        onComplete();
     }
 }

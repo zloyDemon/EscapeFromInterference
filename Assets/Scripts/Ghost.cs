@@ -31,7 +31,6 @@ public class Ghost : MonoBehaviour
     private void Awake()
     {
         checkEnemy = GetComponent<CheckEnemy>();
-        checkEnemy.EnemyChecked += EnemyChecked;
         agent = GetComponent<Agent>();
     }
 
@@ -42,7 +41,6 @@ public class Ghost : MonoBehaviour
 
     private void OnDestroy()
     {
-        checkEnemy.EnemyChecked -= EnemyChecked;
         PathRequestManager.Instance.PfGrid.GridCreated -= PfGridOnGridCreated;
     }
 
@@ -66,11 +64,6 @@ public class Ghost : MonoBehaviour
     {
         ChangeState(new PatrolState());
     }
-
-    private void EnemyChecked(GameObject[] obj)
-    {
-        
-    }
     
     private Vector2 GetNextPointPosition()
     {
@@ -85,6 +78,12 @@ public class Ghost : MonoBehaviour
 
         currentState = newState;
         currentState.Enter(this);
+    }
+
+    public float DistanceToTarget()
+    {
+        var distance = Vector3.Distance(transform.position, Target.position);
+        return distance;
     }
 
     private void MoveToCurrentPoint()

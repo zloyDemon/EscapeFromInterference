@@ -3,8 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class PatrolState : IState<Ghost>
-{
-    private const float MoveDuration = 1.5f;
+{ 
     private const float PointDistance = 1f;
     private const float CheckTargetDistance = 0.5f;
     
@@ -46,7 +45,8 @@ public class PatrolState : IState<Ghost>
     {
         if (Vector2.Distance(currentGhost.transform.position, currentGhost.Target.position) <= CheckTargetDistance)
         {
-            currentGhost.ChangeState(new PatrolState());
+            currentGhost.ChangeState(new FollowTargetState());
+            Debug.Log("New state: Follow player");
         }
     }
     

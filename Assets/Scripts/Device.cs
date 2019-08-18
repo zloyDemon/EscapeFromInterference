@@ -15,6 +15,8 @@ public class Device : MonoBehaviour
     {
         checkEnemy = GetComponent<CheckEnemy>();
         checkEnemy.EnemyChecked += EnemyChecked;
+        checkEnemy.Init(CheckEnemy.CheckTargetType.Ghost);
+        Debug.Log("Device Awake");
     }
 
     private void OnDestroy()
@@ -30,9 +32,9 @@ public class Device : MonoBehaviour
         var deviceValue = DeviceValueF(distance);
         if (deviceValue > EFIUtils.CheckGhostDeviceMaxValue)
             deviceValue = EFIUtils.CheckGhostDeviceMaxValue;
-        GameItems.Instance.SetDeviceValue(deviceValue / EFIUtils.CheckGhostDeviceMaxValue);
+        DeviceManager.Instance.SetSignalValue(deviceValue / EFIUtils.CheckGhostDeviceMaxValue);
         if (distance > EFIUtils.CheckDistance)
-            GameItems.Instance.SetDeviceValue(0);
+            DeviceManager.Instance.SetSignalValue(0);
     }
     
     public float DeviceValueF(float distance)

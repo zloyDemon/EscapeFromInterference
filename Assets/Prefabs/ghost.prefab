@@ -10,13 +10,11 @@ GameObject:
   m_Component:
   - component: {fileID: 8048818571050640314}
   - component: {fileID: 8048818571050640315}
-  - component: {fileID: 8048818571050640311}
   - component: {fileID: 6303021411380597138}
   - component: {fileID: 1402089041790878329}
-  - component: {fileID: 7298435843861986900}
   m_Layer: 0
   m_Name: ghost
-  m_TagString: Untagged
+  m_TagString: Ghost
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -71,7 +69,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 1
   m_Sprite: {fileID: 21300000, guid: a640aff70756c72468e734c54d7fad24, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 1
@@ -83,25 +81,6 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!95 &8048818571050640311
-Animator:
-  serializedVersion: 3
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8048818571050640317}
-  m_Enabled: 1
-  m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: 1be432ab94ada774f9466b0c588f23cf, type: 2}
-  m_CullingMode: 0
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!114 &6303021411380597138
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -128,18 +107,3 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3dde1fe63a147f8438c4214d24a786a2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  target: {fileID: 0}
---- !u!114 &7298435843861986900
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8048818571050640317}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bd33e35e21cb0a742a1ce2827ce95e30, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  enemyTag: 
-  TargetType: 0
