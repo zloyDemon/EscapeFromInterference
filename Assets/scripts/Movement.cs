@@ -14,18 +14,21 @@ public class Movement : MonoBehaviour
     private Animator animator;
     private CheckEnemy checkEnemy;
     private Coroutine checkingCor;
+    private Joystick joystick;
 
     private void Awake()
     {
         flashlight.FlashlightChangeValue += FlashlightChangeValue; 
         flashlight.FlashlighDead += FlashlightDead;
         camera = Camera.main.gameObject;
+        joystick = UIManager.Instance.GameUI.Joystick;
     }
 
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
         animator = GetComponent<Animator>();
+        
     }
 
     private void OnDestroy()
@@ -39,16 +42,15 @@ public class Movement : MonoBehaviour
         camera.transform.position = new Vector3(transform.position.x, transform.position.y, camera.transform.position.z);
     }
 
-    void FixedUpdate()
+    private void FixedUpdate()
     {
-        Move();
+        Move(joystick.JoystickValue);
     }
 
-
-    private void Move()
+    private void Move(Vector2 axisDirection)
     {
-        float inputX = Input.GetAxis("Horizontal");
-        float inputY = Input.GetAxis("Vertical");
+        float inputX = axisDirection.x;
+        float inputY = axisDirection.y;
 
         if ((Mathf.Abs(inputX) > 0.1 || Mathf.Abs(inputY) > 0.1))
         {
@@ -74,6 +76,6 @@ public class Movement : MonoBehaviour
     
     private void FlashlightDead()
     {
-        GameplayManager.Instance.FlashlighDead();
+        GameplayManager.Instance.GameOver(GameplayManager.GameOverReason.FlashlightDead);
     }
 }

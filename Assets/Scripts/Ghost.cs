@@ -10,23 +10,26 @@ public class Ghost : MonoBehaviour
     [SerializeField] GameObject[] patrolPoints;
     [SerializeField] Transform target;
     
-    public Agent Agent { get { return agent; } }
-    public GameObject[] PatrolPoints 
-    { 
-        get { return patrolPoints; }
-        set { patrolPoints = value; }
-    }
-
-    public Transform Target
-    {
-        get { return target; } 
-        set { target = value; }
-    }
-
     private CheckEnemy checkEnemy;
     private Vector2 currentPoint;
     private IState<Ghost> currentState;
     private Agent agent;
+    private bool isTakingTargt;
+    private Coroutine corTakingTarget;
+    
+    public Agent Agent { get { return agent; } }
+    public GameObject[] PatrolPoints 
+    { 
+        get => patrolPoints;
+        set => patrolPoints = value;
+    }
+
+    public Transform Target
+    {
+        get => target;
+        set => target = value;
+    }
+
 
     private void Awake()
     {
@@ -73,9 +76,7 @@ public class Ghost : MonoBehaviour
 
     public void ChangeState(IState<Ghost> newState)
     {
-        if(currentState != null)
-            currentState.Exit();
-
+        currentState?.Exit();
         currentState = newState;
         currentState.Enter(this);
     }
@@ -84,12 +85,5 @@ public class Ghost : MonoBehaviour
     {
         var distance = Vector3.Distance(transform.position, Target.position);
         return distance;
-    }
-
-    private void MoveToCurrentPoint()
-    {
-        transform.position = Vector2.MoveTowards(transform.position, currentPoint, maxDistanceDelta * Time.deltaTime);
-        if (Vector2.Distance(transform.position, currentPoint) < minDistanceToPoint)
-            currentPoint = GetNextPointPosition();
     }
 }

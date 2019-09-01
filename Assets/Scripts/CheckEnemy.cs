@@ -16,6 +16,7 @@ public class CheckEnemy : MonoBehaviour
     }
     
     private CheckTargetType TargetType;
+    private bool canCheck;
     public List<GameObject> Enemies { get; private set; }
     public event Action<GameObject[]> EnemyChecked = g => { };
 
@@ -26,13 +27,24 @@ public class CheckEnemy : MonoBehaviour
     
     private void Update()
     {
-        Check();
+        if(canCheck)
+            Check();
+    }
+
+    private void Start()
+    {
+        DungeonManager.Instance.LevelLoaded += LevelLoaded;
+    }
+
+    private void LevelLoaded()
+    {
+        DungeonManager.Instance.LevelLoaded -= LevelLoaded;
+        Enemies = GetEnemies(TargetType);
+        canCheck = true;
     }
 
     private void Check()
     {
-        if (TargetType == CheckTargetType.None) return;
-        Enemies = GetEnemies(TargetType);
         var enemies = GetEnemiesArrayByTag(Enemies);
         EnemyChecked(enemies.ToArray());    
     }
@@ -62,8 +74,11 @@ public class CheckEnemy : MonoBehaviour
         List<GameObject> list = new List<GameObject>();
         foreach (var enemy in enemies)
         {
-            if(enemy.CompareTag(TargetType.ToString()))
-                list.Add(enemy.gameObject);
+            if (enemy.CompareTag(TargetType.ToString()))
+            {
+                if (Vector2.Distance(enemy.transform.position, transform.position) < CheckRadius)
+                    list.Add(enemy.gameObject);    
+            }
         }
 
         if (list.Count > 0)

@@ -23,8 +23,6 @@ public class Pathfinder : MonoBehaviour
 
         Node startNode = _pfGrid.NodeFromWorldPosition(request.pathStart);
         Node targetNode = _pfGrid.NodeFromWorldPosition(request.pathEnd);
-
-        Debug.Log("Start: " + startNode.worldPosition + " end " + targetNode.worldPosition + " " + PfGrid.MaxSize);
         
         if (startNode.isWalkable && targetNode.isWalkable)
         {

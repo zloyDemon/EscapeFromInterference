@@ -15,6 +15,10 @@ public class Menu : MonoBehaviour
 
     private void NewGameClick()
     {
-        UIManager.Instance.FadeIn(0.8f, () => SceneManager.LoadScene(0));
+        UIManager.Instance.FadeIn(0.8f, () =>
+        {
+            Debug.Log("Game load");
+            SceneManager.LoadScene(0);
+        });
     }
 }

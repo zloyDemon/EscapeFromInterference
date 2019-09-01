@@ -10,12 +10,15 @@ public class GameUI : MonoBehaviour
     private static readonly float lerpSpeed = 2f;
     private static readonly float FadeDuration = 0.5f;
 
-    [SerializeField] Image batteryValue;
+    [SerializeField] BarFill batteryValue;
     [SerializeField] Text batteryCount;
     [SerializeField] Text keyCount;
     [SerializeField] Button changeBatteryBtn;
     [SerializeField] Text subtitleText;
     [SerializeField] CanvasGroup fadeImage;
+    [SerializeField] Joystick joystick;
+    [SerializeField] GameOverScr gameOverScr;
+    [SerializeField] Button pauseButton;
     
     private static GameUI _instance;
     private bool isIndicate = false;
@@ -26,46 +29,32 @@ public class GameUI : MonoBehaviour
     private Coroutine corFade;
     
     public float CurrentIndicateValue { get; set; }
-    public static GameUI Instance { get { return _instance; } }
+    public Joystick Joystick => joystick;
+  
 
     private void Awake()
     {
-        if (_instance == null)
-            _instance = this;
-        if(_instance != this)
-            Destroy(gameObject);
-
-        batteryValue.fillAmount = 1;
+        UIManager.Instance.SetGameUI(this);
         subtitleText.text = string.Empty;
-
         GameItems.Instance.BatteryCountChange += InstanceOnBatteryCountChange;
         GameItems.Instance.BatteryValueChange += InstanceOnBatteryValueChange;
         GameItems.Instance.KeyCountChange += InstanceOnKeyCountChange;
-        GameItems.Instance.DeviceValueChange += SetIndication;
         changeBatteryBtn.onClick.AddListener(ChangeBatteryClick);
-
-        
+        pauseButton.onClick.AddListener(PauseGame);
         InstanceOnBatteryCountChange(GameItems.Instance.BatteryCount);
         InstanceOnKeyCountChange(0);
     }
 
     private void Start()
     {
-        DungeonManager.Instance.LevelLoaded += InstanceOnLevelLoaded;
         SubtitleManager.Instance.SubtitleSet += SetSubtitleText;
-        GameplayManager.Instance.StartFallGame += FadeTakingPlayer;
         GameplayManager.Instance.EndGame += EndGame;
         Debug.Log("GameUI Start");
     }
 
-    private void InstanceOnLevelLoaded()
-    {
-        
-    }
-
     private void EndGame()
     {
-        SubtitleManager.Instance.SetSubtitle("Game over");
+        gameOverScr.Init();
     }
 
     private void OnDestroy()
@@ -73,11 +62,8 @@ public class GameUI : MonoBehaviour
         GameItems.Instance.BatteryCountChange -= InstanceOnBatteryCountChange;
         GameItems.Instance.BatteryValueChange -= InstanceOnBatteryValueChange;
         GameItems.Instance.KeyCountChange -= InstanceOnKeyCountChange;
-        GameItems.Instance.DeviceValueChange -= SetIndication;
-        GameplayManager.Instance.EndGame += EndGame;
+        GameplayManager.Instance.EndGame -= EndGame;
         SubtitleManager.Instance.SubtitleSet -= SetSubtitleText;
-        DungeonManager.Instance.LevelLoaded -= InstanceOnLevelLoaded;
-        GameplayManager.Instance.StartFallGame -= FadeTakingPlayer;
     }
     
     private void InstanceOnBatteryCountChange(int value)
@@ -85,23 +71,14 @@ public class GameUI : MonoBehaviour
         batteryCount.text = string.Format("{0}", value);
         changeBatteryBtn.interactable = value > 0;
     }
-
-    private void FadeTakingPlayer(bool isTaking)
-    {
-        Debug.LogError("IsTaking: " + isTaking);
-        if (corFade != null)
-        {
-            StopCoroutine(corFade);
-            corFade = null;
-        }
-
-        corFade = StartCoroutine(CorTakingFade(isTaking));
-    }
     
     private void InstanceOnBatteryValueChange(float value)
     {
         float res = value / Flashlight.FlashlighMaxValue;
-        batteryValue.fillAmount = res;
+        batteryValue.SetValue(res);
+
+        if (batteryValue.Value < 0.3f)
+            batteryValue.FillImage.color = Color.red;
     }
     
     private void InstanceOnKeyCountChange(int value)
@@ -109,10 +86,10 @@ public class GameUI : MonoBehaviour
         keyCount.text = string.Format("{0}", value);
     }
 
-
-    public void SetIndication(float value)
+    private void PauseGame()
     {
-
+        bool isPause = GameplayManager.Instance.IsGamePause;
+        GameplayManager.Instance.IsGamePause = !isPause;
     }
 
     private void ChangeBatteryClick()
@@ -124,37 +101,5 @@ public class GameUI : MonoBehaviour
     private void SetSubtitleText(string text)
     {
         subtitleText.text = text;
-    }
-
-    private IEnumerator CorTakingFade(bool FadeOut)
-    {
-        float result;
-        if (FadeOut)
-        {
-            for (float i = fadeImage.alpha; i < 1; i += (FadeDuration * Time.deltaTime))
-            {
-                fadeImage.alpha = i;
-                yield return null;
-            }
-               
-            result = 1;
-            yield return new WaitForSeconds(1);
-        }
-        else
-        {
-            for (float i = fadeImage.alpha; i > 0; i -= (FadeDuration * Time.deltaTime))
-            {
-                fadeImage.alpha = i;
-                yield return null;
-            }
-            result = 0;
-            yield return new WaitForSeconds(1);
-        }
-
-        fadeImage.alpha = result;
-        Debug.LogError("isTaking " + FadeOut);
-        if(FadeOut)
-            GameplayManager.Instance.StartEndGame();
-        corFade = null;
     }
 }

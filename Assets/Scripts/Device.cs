@@ -3,7 +3,6 @@
 [RequireComponent(typeof(CheckEnemy))]
 public class Device : MonoBehaviour
 {
-    public static readonly float DistanceForEnd = 1.2f;
     public static readonly float CheckGhostDeviceMaxValue = 5f;
     public static readonly float CheckDistance = 3f;
     
@@ -16,7 +15,11 @@ public class Device : MonoBehaviour
         checkEnemy = GetComponent<CheckEnemy>();
         checkEnemy.EnemyChecked += EnemyChecked;
         checkEnemy.Init(CheckEnemy.CheckTargetType.Ghost);
-        Debug.Log("Device Awake");
+    }
+
+    private void Start()
+    {
+        DeviceManager.Instance.SetSignalValue(0.01f);
     }
 
     private void OnDestroy()
@@ -27,18 +30,22 @@ public class Device : MonoBehaviour
     private void EnemyChecked(GameObject[] enemies)
     {
         if (enemies.Length <= 0) return;
-        var nearEnemy = enemies[0];
-        var distance = Vector2.Distance(transform.position, nearEnemy.transform.position);
-        var deviceValue = DeviceValueF(distance);
-        if (deviceValue > EFIUtils.CheckGhostDeviceMaxValue)
-            deviceValue = EFIUtils.CheckGhostDeviceMaxValue;
-        DeviceManager.Instance.SetSignalValue(deviceValue / EFIUtils.CheckGhostDeviceMaxValue);
-        if (distance > EFIUtils.CheckDistance)
-            DeviceManager.Instance.SetSignalValue(0);
+        var value = CalcDeviceValue(enemies[0].transform);
+        DeviceManager.Instance.SetSignalValue(value);
     }
-    
-    public float DeviceValueF(float distance)
+
+    private float CalcDeviceValue(Transform nearEnemy)
     {
-        return CheckGhostDeviceMaxValue - ((distance * CheckGhostDeviceMaxValue) / CheckDistance);
+        var distance = Vector2.Distance(transform.position, nearEnemy.transform.position);
+        
+        if (distance > DeviceManager.CheckDistance)
+            return 0.01f;
+        
+        var deviceValue = CheckGhostDeviceMaxValue - ((distance * CheckGhostDeviceMaxValue) / CheckDistance);
+        
+        if (deviceValue > DeviceManager.CheckGhostDeviceMaxValue)
+            deviceValue = DeviceManager.CheckGhostDeviceMaxValue;
+        
+        return (float)deviceValue / DeviceManager.CheckGhostDeviceMaxValue;
     }
 }

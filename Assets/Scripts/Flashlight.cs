@@ -27,15 +27,15 @@ public class Flashlight : MonoBehaviour
     private Coroutine coChargeFullFlashlight;
     private float alphaBlink;
 
-    public Action FlashlighDead = () => { };
-    public Action<float> FlashlightChangeValue = v => { };
+    public event Action FlashlighDead = () => { };
+    public event Action<float> FlashlightChangeValue = v => { };
 
-    public bool IsFlashlightOff { get { return isFlashlightOff; }}
+    public bool IsFlashlightOff => isFlashlightOff;
 
     public float FlashlightChargeValue
     {
-        get { return flashlightValue; }
-        set { flashlightValue = value; }
+        get => flashlightValue;
+        set => flashlightValue = value;
     }
     
     public static float FlashlighMaxValue { get { return FlashlightMaxValue; }}
@@ -58,7 +58,6 @@ public class Flashlight : MonoBehaviour
 
     private void Update()
     {
-        //transform.position = target.position;
         ReduceChargeFL();
     }
 
@@ -100,7 +99,6 @@ public class Flashlight : MonoBehaviour
                 spriteMask.enabled = false;
                 FlashlighDead();
             }
-                
         }
     }
 

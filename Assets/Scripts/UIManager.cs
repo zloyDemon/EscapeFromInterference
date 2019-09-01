@@ -8,6 +8,8 @@ public class UIManager : MonoBehaviour
 {
     [SerializeField] CanvasGroup fadeImage;
     public static UIManager Instance { get; private set; }
+
+    public GameUI GameUI { get; set; }
     
     private void Awake()
     {
@@ -29,6 +31,12 @@ public class UIManager : MonoBehaviour
     public void FadeIn(float duration, Action onComplete)
     {
         StartCoroutine(CoFadeIn(duration, onComplete));
+    }
+
+    public void SetGameUI(GameUI gameUI)
+    {
+        if (GameUI == null)
+            GameUI = gameUI;
     }
 
     private IEnumerator CoFadeOut(float duration, Action onComplete)
@@ -55,5 +63,6 @@ public class UIManager : MonoBehaviour
 
         fadeImage.alpha = 1;
         fadeImage.GetComponent<Image>().raycastTarget = false;
+        onComplete();
     }
 }

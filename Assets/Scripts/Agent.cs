@@ -14,6 +14,8 @@ public class Agent : MonoBehaviour
     private Vector2 currentTargetPoint;
     private bool isMoving;
     private int pointIndex;
+
+    public float AgentMoveSpeed { get; set; } = MoveDuration;
     
     public List<Vector2> CurrentPath { get { return currentPath; } }
     
@@ -46,7 +48,6 @@ public class Agent : MonoBehaviour
         
         currentPath = new List<Vector2>(pathPoints);
         isMoving = true;
-        Debug.Log("Path found: " + pathPoints.Length);
     }
 
     private void PfGridOnGridCreated()
@@ -78,7 +79,7 @@ public class Agent : MonoBehaviour
             return;
 
         var currentPoint = currentPath[pointIndex];
-        transform.position = Vector2.MoveTowards(transform.position, currentPoint, MoveDuration * Time.deltaTime);
+        transform.position = Vector2.MoveTowards(transform.position, currentPoint, AgentMoveSpeed * Time.deltaTime);
         if (Vector2.Distance(transform.position, currentPoint) <= DistanceToPoint)
             pointIndex++;
         

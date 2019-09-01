@@ -5,7 +5,7 @@ using UnityEngine;
 public class PatrolState : IState<Ghost>
 { 
     private const float PointDistance = 1f;
-    private const float CheckTargetDistance = 0.5f;
+    private const float CheckTargetDistance = 1.5f;
     
     private Ghost currentGhost;
     private GameObject[] patrolPoints;
