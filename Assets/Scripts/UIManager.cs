@@ -7,6 +7,8 @@ using UnityEngine.UI;
 public class UIManager : MonoBehaviour
 {
     [SerializeField] CanvasGroup fadeImage;
+    [SerializeField] RectTransform loadingScreen; 
+
     public static UIManager Instance { get; private set; }
 
     public GameUI GameUI { get; set; }
@@ -21,6 +23,11 @@ public class UIManager : MonoBehaviour
         
         DontDestroyOnLoad(gameObject);
         fadeImage.gameObject.SetActive(true);
+    }
+
+    public void ShowHideLoadingScreen(bool isShow)
+    {
+        loadingScreen.gameObject.SetActive(isShow);
     }
 
     public void FadeOut(float duration, Action onComplete)

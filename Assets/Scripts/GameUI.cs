@@ -49,6 +49,7 @@ public class GameUI : MonoBehaviour
     {
         SubtitleManager.Instance.SubtitleSet += SetSubtitleText;
         GameplayManager.Instance.EndGame += EndGame;
+        GameplayManager.Instance.PauseGame += PauseGame;
         Debug.Log("GameUI Start");
     }
 
@@ -63,6 +64,7 @@ public class GameUI : MonoBehaviour
         GameItems.Instance.BatteryValueChange -= InstanceOnBatteryValueChange;
         GameItems.Instance.KeyCountChange -= InstanceOnKeyCountChange;
         GameplayManager.Instance.EndGame -= EndGame;
+        GameplayManager.Instance.PauseGame += PauseGame;
         SubtitleManager.Instance.SubtitleSet -= SetSubtitleText;
     }
     
@@ -76,9 +78,6 @@ public class GameUI : MonoBehaviour
     {
         float res = value / Flashlight.FlashlighMaxValue;
         batteryValue.SetValue(res);
-
-        if (batteryValue.Value < 0.3f)
-            batteryValue.FillImage.color = Color.red;
     }
     
     private void InstanceOnKeyCountChange(int value)
@@ -101,5 +100,10 @@ public class GameUI : MonoBehaviour
     private void SetSubtitleText(string text)
     {
         subtitleText.text = text;
+    }
+
+    private void PauseGame(bool isPause)
+    {
+        changeBatteryBtn.image.raycastTarget = !isPause;
     }
 }

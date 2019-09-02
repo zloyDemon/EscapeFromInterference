@@ -17,7 +17,7 @@ public class Menu : MonoBehaviour
     {
         UIManager.Instance.FadeIn(0.8f, () =>
         {
-            Debug.Log("Game load");
+            UIManager.Instance.ShowHideLoadingScreen(true);
             SceneManager.LoadScene(0);
         });
     }

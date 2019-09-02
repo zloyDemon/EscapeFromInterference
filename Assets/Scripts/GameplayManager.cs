@@ -64,6 +64,7 @@ public class GameplayManager : MonoBehaviour
     private void InstanceOnLevelLoaded()
     {
         DungeonManager.Instance.LevelLoaded -= InstanceOnLevelLoaded;
+        UIManager.Instance.ShowHideLoadingScreen(false);
         UIManager.Instance.FadeOut(0.8f, () =>
         {
             currentMissionInfo = DungeonManager.Instance.CurrentMissionInfo;
@@ -98,6 +99,8 @@ public class GameplayManager : MonoBehaviour
             if (corEndGame == null)
                 corEndGame = StartCoroutine(CorEndGame());
         }
+
+        currentReason = reason;
     }
 
     private void DisableGameOverCor()

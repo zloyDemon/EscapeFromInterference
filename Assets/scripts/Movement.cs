@@ -7,7 +7,6 @@ public class Movement : MonoBehaviour
 {
     [SerializeField] float MoveSpeed = 25f;
     [SerializeField] Flashlight flashlight;
-    [SerializeField] private GameObject camera;
     
     private Rigidbody2D rb;
     private Vector2 movement;
@@ -15,6 +14,7 @@ public class Movement : MonoBehaviour
     private CheckEnemy checkEnemy;
     private Coroutine checkingCor;
     private Joystick joystick;
+    private GameObject camera;
 
     private void Awake()
     {
