@@ -65,7 +65,7 @@ public class GameplayManager : MonoBehaviour
     {
         DungeonManager.Instance.LevelLoaded -= InstanceOnLevelLoaded;
         UIManager.Instance.ShowHideLoadingScreen(false);
-        UIManager.Instance.FadeOut(0.8f, () =>
+        UIManager.Instance.BlackScrFadeOut(0.8f, () =>
         {
             currentMissionInfo = DungeonManager.Instance.CurrentMissionInfo;
         });
@@ -79,7 +79,7 @@ public class GameplayManager : MonoBehaviour
 
     public void MissionComplete()
     {
-        UIManager.Instance.FadeIn(0.8f, () =>
+        UIManager.Instance.BlackScrFadeIn(0.8f, () =>
         { 
             GameItems.Instance.ResetItems();
             SceneManager.LoadScene(0);

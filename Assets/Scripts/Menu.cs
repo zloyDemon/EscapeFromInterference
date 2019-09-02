@@ -15,7 +15,7 @@ public class Menu : MonoBehaviour
 
     private void NewGameClick()
     {
-        UIManager.Instance.FadeIn(0.8f, () =>
+        UIManager.Instance.BlackScrFadeIn(0.8f, () =>
         {
             UIManager.Instance.ShowHideLoadingScreen(true);
             SceneManager.LoadScene(0);

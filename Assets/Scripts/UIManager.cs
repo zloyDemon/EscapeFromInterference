@@ -25,51 +25,54 @@ public class UIManager : MonoBehaviour
         fadeImage.gameObject.SetActive(true);
     }
 
-    public void ShowHideLoadingScreen(bool isShow)
-    {
-        loadingScreen.gameObject.SetActive(isShow);
-    }
-
-    public void FadeOut(float duration, Action onComplete)
-    {
-        StartCoroutine(CoFadeOut(duration, onComplete));
-    }
-
-    public void FadeIn(float duration, Action onComplete)
-    {
-        StartCoroutine(CoFadeIn(duration, onComplete));
-    }
-
+    //TODO Временное решение
     public void SetGameUI(GameUI gameUI)
     {
         if (GameUI == null)
             GameUI = gameUI;
     }
-
-    private IEnumerator CoFadeOut(float duration, Action onComplete)
+    //TODO Временное решение
+    public void ShowHideLoadingScreen(bool isShow)
     {
-
-        for (float i = 1; i > 0; i -= Time.deltaTime * duration)
-        {
-            fadeImage.alpha = i;
-            yield return null;
-        }
-
-        fadeImage.alpha = 0;
-        onComplete();
+        loadingScreen.gameObject.SetActive(isShow);
     }
 
-    private IEnumerator CoFadeIn(float duration, Action onComplete)
+    public void BlackScrFadeOut(float duration, Action onComplete)
     {
-        fadeImage.GetComponent<Image>().raycastTarget = true;
-        for (float i = 0; i < 1; i += duration * Time.deltaTime)
+        FadeOut(fadeImage, duration, onComplete);
+    }
+
+    public void BlackScrFadeIn(float duration, Action onComplete)
+    {
+        FadeIn(fadeImage, duration, onComplete);
+    }
+
+    public void FadeOut(CanvasGroup canvasGroup, float duration, Action onComplete)
+    {
+        StartCoroutine(Fade(canvasGroup, true, duration, onComplete));
+    }
+
+    public void FadeIn(CanvasGroup canvasGroup, float duration, Action onComplete)
+    {
+        StartCoroutine(Fade(canvasGroup, false, duration, onComplete));
+    }
+
+    private IEnumerator Fade(CanvasGroup canvasGroup, bool isFadeOut, float duration, Action onComplete)
+    {
+        float finalValue = isFadeOut ? 0 : 1;
+        float alpha = canvasGroup.alpha;
+        float value = isFadeOut ? -alpha : alpha;
+        alpha = value;
+        
+        while(value < finalValue)
         {
-            fadeImage.alpha = i;
+            value += duration * Time.deltaTime;
+            alpha = value < 0 ? -value : value;
+            canvasGroup.alpha = alpha;
             yield return null;
         }
 
-        fadeImage.alpha = 1;
-        fadeImage.GetComponent<Image>().raycastTarget = false;
+        canvasGroup.alpha = finalValue;
         onComplete();
     }
 }
