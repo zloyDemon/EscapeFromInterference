@@ -384,7 +384,7 @@ CanvasGroup:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 9057066715030453794}
   m_Enabled: 1
-  m_Alpha: 1
+  m_Alpha: 0
   m_Interactable: 1
   m_BlocksRaycasts: 1
   m_IgnoreParentGroups: 0
@@ -399,6 +399,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: LoadingScr
+      objectReference: {fileID: 0}
+    - target: {fileID: 1727382031247634978, guid: 5e1c60f2ec7a6774aa727a4cd7561be7,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1533742911526323363, guid: 5e1c60f2ec7a6774aa727a4cd7561be7,
         type: 3}

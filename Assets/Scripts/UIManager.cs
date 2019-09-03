@@ -22,7 +22,8 @@ public class UIManager : MonoBehaviour
             Destroy(gameObject);
         
         DontDestroyOnLoad(gameObject);
-        fadeImage.gameObject.SetActive(true);
+        
+        fadeImage.alpha = 1;
     }
 
     //TODO Временное решение
@@ -66,7 +67,7 @@ public class UIManager : MonoBehaviour
         
         while(value < finalValue)
         {
-            value += duration * Time.deltaTime;
+            value += duration * 0.01f;
             alpha = value < 0 ? -value : value;
             canvasGroup.alpha = alpha;
             yield return null;

@@ -51,7 +51,8 @@ public class GameplayManager : MonoBehaviour
             instance = this;
         if (instance != this)
             Destroy(gameObject);
-        
+
+        IsGamePause = false;
         Debug.Log("Awake GameplayManager");
     }
 
@@ -92,7 +93,13 @@ public class GameplayManager : MonoBehaviour
             return;
 
         if (reason == GameOverReason.DisableGO)
-            DisableGameOverCor();
+        {
+            if (corEndGame != null)
+            {
+                StopCoroutine(corEndGame);
+                corEndGame = null;
+            }
+        }
 
         if (reason == GameOverReason.EnemyCatch || reason == GameOverReason.FlashlightDead)
         {
@@ -101,15 +108,6 @@ public class GameplayManager : MonoBehaviour
         }
 
         currentReason = reason;
-    }
-
-    private void DisableGameOverCor()
-    {
-        if (corEndGame != null)
-        {
-            StopCoroutine(corEndGame);
-            corEndGame = null;
-        }
     }
 
     private IEnumerator CorEndGame()

@@ -151,6 +151,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   level: 2
   batteryCount: 0
+  keyboardControl: 0
 --- !u!4 &255501719
 Transform:
   m_ObjectHideFlags: 0
@@ -425,6 +426,16 @@ PrefabInstance:
     - target: {fileID: 9057066715030453792, guid: 5f8d289ef4bbcbe41991b869e6d9a320,
         type: 3}
       propertyPath: m_RaycastTarget
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 521713645975139794, guid: 5f8d289ef4bbcbe41991b869e6d9a320,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6459230821025022813, guid: 5f8d289ef4bbcbe41991b869e6d9a320,
+        type: 3}
+      propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
