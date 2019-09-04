@@ -7,7 +7,9 @@ using UnityEngine.UI;
 public class UIManager : MonoBehaviour
 {
     [SerializeField] CanvasGroup fadeImage;
-    [SerializeField] RectTransform loadingScreen; 
+    [SerializeField] RectTransform loadingScreen;
+
+    private Coroutine corFade;
 
     public static UIManager Instance { get; private set; }
 
@@ -50,12 +52,23 @@ public class UIManager : MonoBehaviour
 
     public void FadeOut(CanvasGroup canvasGroup, float duration, Action onComplete)
     {
-        StartCoroutine(Fade(canvasGroup, true, duration, onComplete));
+        StartFadeCoroutine(canvasGroup, true, duration, onComplete);
     }
 
     public void FadeIn(CanvasGroup canvasGroup, float duration, Action onComplete)
     {
-        StartCoroutine(Fade(canvasGroup, false, duration, onComplete));
+        StartFadeCoroutine(canvasGroup, false, duration, onComplete);
+    }
+
+    private void StartFadeCoroutine(CanvasGroup canvasGroup, bool isFadeOut, float duration, Action onComplete)
+    {
+        if(corFade != null)
+        {
+            StopCoroutine(corFade);
+            corFade = null;
+        }
+
+        corFade = StartCoroutine(Fade(canvasGroup, isFadeOut, duration, onComplete));
     }
 
     private IEnumerator Fade(CanvasGroup canvasGroup, bool isFadeOut, float duration, Action onComplete)

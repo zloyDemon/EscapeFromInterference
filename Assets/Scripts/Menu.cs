@@ -11,12 +11,12 @@ public class Menu : MonoBehaviour
     private void Awake()
     {
         newGameBtn.onClick.AddListener(NewGameClick);
-        UIManager.Instance.BlackScrFadeOut(0.5f, () => { });
+        UIManager.Instance.BlackScrFadeOut(2f, () => { });
     }
 
     private void NewGameClick()
     {
-        UIManager.Instance.BlackScrFadeIn(0.8f, () =>
+        UIManager.Instance.BlackScrFadeIn(2f, () =>
         {
             UIManager.Instance.ShowHideLoadingScreen(true);
             SceneManager.LoadScene(1);
