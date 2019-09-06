@@ -49,7 +49,7 @@ public class DungeonManager : MonoBehaviour
 
     private void Load()
     {
-        string path = string.Format(LevelPrefix, missionInfo.MissionId);
+        string path = string.Format(LevelPrefix, missionInfo.MissionIndex);
         var loadGrid = Resources.Load<Grid>(path);
         Grid dungeon = Instantiate(loadGrid, Vector3.zero, Quaternion.identity, dungeonParent.transform);
 
@@ -83,7 +83,7 @@ public class DungeonManager : MonoBehaviour
         //TODO For testing
         BlackTiles(tilemapGround, tilemapWall, tilemapBlack);
         
-        RandomSpawnObjects(keyPrefab, itemsParent.transform, missionInfo.NeedKey);
+        RandomSpawnObjects(keyPrefab, itemsParent.transform, missionInfo.NeedKeys);
         RandomSpawnObjects(batteryPrefab,itemsParent.transform, missionInfo.BatteryCount);
         var player = SpawnPlayer(ps.position);
         
@@ -172,7 +172,7 @@ public class DungeonManager : MonoBehaviour
     {
         Load();
         yield return new WaitForEndOfFrame();
-        Debug.Log("LevelLoaded: " + CurrentMissionInfo.MissionId);
+        Debug.Log("LevelLoaded: " + CurrentMissionInfo.MissionIndex);
         LevelLoaded();
     }
 }

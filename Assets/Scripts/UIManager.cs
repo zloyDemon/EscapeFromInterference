@@ -87,6 +87,7 @@ public class UIManager : MonoBehaviour
         }
 
         canvasGroup.alpha = finalValue;
+        corFade = null;
         onComplete();
     }
 }
