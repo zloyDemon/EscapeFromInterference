@@ -73,6 +73,7 @@ public class UIManager : MonoBehaviour
 
     private IEnumerator Fade(CanvasGroup canvasGroup, bool isFadeOut, float duration, Action onComplete)
     {
+        const float FadeMultiplier = 0.01f;
         float finalValue = isFadeOut ? 0 : 1;
         float alpha = canvasGroup.alpha;
         float value = isFadeOut ? -alpha : alpha;
@@ -80,7 +81,7 @@ public class UIManager : MonoBehaviour
         
         while(value < finalValue)
         {
-            value += duration * 0.01f;
+            value += duration * FadeMultiplier;
             alpha = value < 0 ? -value : value;
             canvasGroup.alpha = alpha;
             yield return null;

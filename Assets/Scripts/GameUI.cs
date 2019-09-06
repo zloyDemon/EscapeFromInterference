@@ -50,7 +50,6 @@ public class GameUI : MonoBehaviour
         SubtitleManager.Instance.SubtitleSet += SetSubtitleText;
         GameplayManager.Instance.EndGame += EndGame;
         GameplayManager.Instance.PauseGame += PauseGame;
-        Debug.Log("GameUI Start");
     }
 
     private void EndGame()
@@ -64,7 +63,7 @@ public class GameUI : MonoBehaviour
         GameItems.Instance.BatteryValueChange -= InstanceOnBatteryValueChange;
         GameItems.Instance.KeyCountChange -= InstanceOnKeyCountChange;
         GameplayManager.Instance.EndGame -= EndGame;
-        GameplayManager.Instance.PauseGame += PauseGame;
+        GameplayManager.Instance.PauseGame -= PauseGame;
         SubtitleManager.Instance.SubtitleSet -= SetSubtitleText;
     }
     

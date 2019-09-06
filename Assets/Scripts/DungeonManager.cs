@@ -26,7 +26,6 @@ public class DungeonManager : MonoBehaviour
     public static DungeonManager Instance { get; private set; }
     public int DungLevel { get { return missionInfo.Level; }}
     public List<Vector3> AvailablePosition { get { return availablePosition; }}
-    public MissionInfo CurrentMissionInfo { get { return missionInfo; }}
     public event Action LevelLoaded = () => {};
     public Vector3 WPosition { get; private set; }
     public Vector3 Size { get; private set; }
@@ -37,19 +36,23 @@ public class DungeonManager : MonoBehaviour
             Instance = this;
         if(Instance != this)
             Destroy(gameObject);
+    }
 
-        var missionId = GameConfig.Instance.Level;
-        missionInfo = new MissionInfo(missionId,3,5,3);
+    private void OnDestroy()
+    {
+        Debug.Log("DungeonManager destroyed.");
     }
 
     public void LoadLevel()
     {
+        missionInfo = MissionManager.Instance.CurrentMission;
+        Debug.Log($"DungeonManager: LoadLevel: {missionInfo.Level}");
         StartCoroutine(CoLoadLevel());
     }
 
     private void Load()
     {
-        string path = string.Format(LevelPrefix, missionInfo.MissionIndex);
+        string path = string.Format(LevelPrefix, missionInfo.Level);
         var loadGrid = Resources.Load<Grid>(path);
         Grid dungeon = Instantiate(loadGrid, Vector3.zero, Quaternion.identity, dungeonParent.transform);
 
@@ -92,8 +95,6 @@ public class DungeonManager : MonoBehaviour
         for (int i = 0; i < patrolPointsParent.childCount; i++)
             patrolPointsForGhost.Add(patrolPointsParent.GetChild(i).gameObject);
         SpawnGhosts(player.transform, patrolPointsForGhost);
-
-        Debug.Log("MapSize: " + tilemapWall.CellToWorld(tilemapWall.cellBounds.position) + " " + tilemapWall.size + " " + tilemapWall.cellBounds.center);
     }
 
     private void BlackTiles(Tilemap tilemapFloor, Tilemap tilemapWall, Tilemap tilemapBlack)
@@ -172,7 +173,7 @@ public class DungeonManager : MonoBehaviour
     {
         Load();
         yield return new WaitForEndOfFrame();
-        Debug.Log("LevelLoaded: " + CurrentMissionInfo.MissionIndex);
+        Debug.Log("LevelLoaded: " + MissionManager.Instance.CurrentMission.MissionIndex);
         LevelLoaded();
     }
 }

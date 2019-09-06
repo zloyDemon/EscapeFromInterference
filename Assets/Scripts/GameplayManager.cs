@@ -6,26 +6,19 @@ using UnityEngine.SceneManagement;
 
 public class GameplayManager : MonoBehaviour
 {
-    public enum GameOverReason
-    {
-        FlashlightDead,
-        EnemyCatch,
-        DisableGO,
-        None,
-    }
-    
     public static readonly float TimeForEnd = 1f;
-
-    private MissionInfo currentMissionInfo;
+    private const float FadeDuration = 0.8f;
+    
     private static GameplayManager instance;
     private bool isEnemyCatch;
     private bool isEnd;
     private Coroutine corEndGame;
     private bool isGamePause;
     private float checkGhostDeviceValue;
-    private GameOverReason currentReason = GameOverReason.None;
+    private EFIEnums.GameOverReason currentReason = EFIEnums.GameOverReason.None;
     
     public static GameplayManager Instance => instance;
+    
     public Transform Player { get; set; }
     public List<GameObject> GhostOnMap { get; set; }
     
@@ -34,16 +27,9 @@ public class GameplayManager : MonoBehaviour
     
     public bool IsGamePause
     {
-        set
-        {
-            isGamePause = value;
-            GamePause(isGamePause);
-        }
-
+        set => GamePause(value);
         get => isGamePause;
     }
-
-    public MissionInfo CurrentMissionInfo => currentMissionInfo;
 
     private void Awake()
     {
@@ -53,46 +39,51 @@ public class GameplayManager : MonoBehaviour
             Destroy(gameObject);
 
         IsGamePause = false;
+        MissionManager.Instance.MissionCompleted += MissionCompleted;
         Debug.Log("Awake GameplayManager");
     }
 
     private void Start()
     {
-        DungeonManager.Instance.LevelLoaded += InstanceOnLevelLoaded;
+        DungeonManager.Instance.LevelLoaded += LevelLoaded;
         DungeonManager.Instance.LoadLevel();
     }
 
-    private void InstanceOnLevelLoaded()
+    private void OnDestroy()
     {
-        DungeonManager.Instance.LevelLoaded -= InstanceOnLevelLoaded;
+        MissionManager.Instance.MissionCompleted -= MissionCompleted;
+    }
+
+    private void LevelLoaded()
+    {
+        DungeonManager.Instance.LevelLoaded -= LevelLoaded;
         UIManager.Instance.ShowHideLoadingScreen(false);
-        UIManager.Instance.BlackScrFadeOut(0.8f, () =>
-        {
-            currentMissionInfo = DungeonManager.Instance.CurrentMissionInfo;
-        });
+        UIManager.Instance.BlackScrFadeOut(FadeDuration, () => { });
     }
 
     private void GamePause(bool isPause)
     {
         Time.timeScale = isPause ? 0 : 1;
+        isGamePause = isPause;
         PauseGame(isPause);
     }
 
-    public void MissionComplete()
+    public void MissionCompleted(MissionInfo missionInfo)
     {
-        UIManager.Instance.BlackScrFadeIn(0.8f, () =>
+        UIManager.Instance.BlackScrFadeIn(FadeDuration, () =>
         { 
+            UIManager.Instance.ShowHideLoadingScreen(true);
             GameItems.Instance.ResetItems();
-            SceneManager.LoadScene(0);
+            SceneManager.LoadScene(1);
         });
     }
 
-    public void GameOver(GameOverReason reason)
+    public void GameOver(EFIEnums.GameOverReason reason)
     {
         if (currentReason == reason)
             return;
 
-        if (reason == GameOverReason.DisableGO)
+        if (reason == EFIEnums.GameOverReason.DisableGO)
         {
             if (corEndGame != null)
             {
@@ -101,7 +92,7 @@ public class GameplayManager : MonoBehaviour
             }
         }
 
-        if (reason == GameOverReason.EnemyCatch || reason == GameOverReason.FlashlightDead)
+        if (reason == EFIEnums.GameOverReason.EnemyCatch || reason == EFIEnums.GameOverReason.FlashlightDead)
         {
             if (corEndGame == null)
                 corEndGame = StartCoroutine(CorEndGame());

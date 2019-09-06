@@ -76,6 +76,6 @@ public class Movement : MonoBehaviour
     
     private void FlashlightDead()
     {
-        GameplayManager.Instance.GameOver(GameplayManager.GameOverReason.FlashlightDead);
+        GameplayManager.Instance.GameOver(EFIEnums.GameOverReason.FlashlightDead);
     }
 }

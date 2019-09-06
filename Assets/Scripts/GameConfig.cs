@@ -11,7 +11,6 @@ public class GameConfig : MonoBehaviour
     public int batteryCount;
 
     [SerializeField] private bool keyboardControl;
-    public MissionInfo DebugMissionInfo { get{return new MissionInfo(1,1,1,1);}}
     
     public int Level
     {
@@ -27,8 +26,12 @@ public class GameConfig : MonoBehaviour
         if (Instance == null)
             Instance = this;
         if (Instance != this)
+        {
             Destroy(gameObject);
-        
+            return;
+        }
+            
         DontDestroyOnLoad(gameObject);
+        MissionManager.Instance.Init();
     }
 }
