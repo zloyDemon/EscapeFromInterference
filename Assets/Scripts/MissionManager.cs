@@ -42,11 +42,15 @@ public class MissionManager
     {
         CurrentMission.IsCompleted = true;
         var completedMission = CurrentMission.Clone() as MissionInfo;
-        var nextMission = NextMission();
-        if(nextMission != null)
-            ChangeMission(nextMission.MissionIndex);
         Debug.Log($"MissionCompleted: completedMission {completedMission.Level} nextMission {CurrentMission.Level} ");
         MissionCompleted(completedMission);
+    }
+
+    public void ChangeOnNextMission()
+    {
+        var nextMission = NextMission();
+        if (nextMission != null)
+            ChangeMission(nextMission.MissionIndex);
     }
 
     public bool CheckAllMissionsCompleted()

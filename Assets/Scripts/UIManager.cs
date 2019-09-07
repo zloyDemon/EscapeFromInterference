@@ -6,10 +6,14 @@ using UnityEngine.UI;
 
 public class UIManager : MonoBehaviour
 {
+    public const float FadeDurationGeneral = 0.8f; 
+    
     [SerializeField] CanvasGroup fadeImage;
     [SerializeField] RectTransform loadingScreen;
+    [SerializeField] RectTransform endLevelScreen;
 
-    private Coroutine corFade;
+    private Coroutine corFadeBS;
+    private Coroutine corFadeElement;
 
     public static UIManager Instance { get; private set; }
 
@@ -40,6 +44,12 @@ public class UIManager : MonoBehaviour
         loadingScreen.gameObject.SetActive(isShow);
     }
 
+    //TODO Временное решение
+    public void ShowEndLevelScreen(bool isShow)
+    {
+        endLevelScreen.gameObject.SetActive(isShow);
+    }
+
     public void BlackScrFadeOut(float duration, Action onComplete)
     {
         FadeOut(fadeImage, duration, onComplete);
@@ -48,6 +58,11 @@ public class UIManager : MonoBehaviour
     public void BlackScrFadeIn(float duration, Action onComplete)
     {
         FadeIn(fadeImage, duration, onComplete);
+    }
+    
+    public void BlackScrFadeInOut(float duration, Action<EFIEnums.FadeType> onComplete)
+    {
+        FadeInOut(fadeImage, duration, onComplete);
     }
 
     public void FadeOut(CanvasGroup canvasGroup, float duration, Action onComplete)
@@ -60,15 +75,24 @@ public class UIManager : MonoBehaviour
         StartFadeCoroutine(canvasGroup, false, duration, onComplete);
     }
 
+    public void FadeInOut(CanvasGroup canvasGroup, float duration, Action<EFIEnums.FadeType> onComplete)
+    {
+        FadeIn(canvasGroup, duration, () =>
+        {
+            onComplete(EFIEnums.FadeType.FadeIn);
+            FadeOut(canvasGroup, duration, () => onComplete(EFIEnums.FadeType.FadeOut));
+        });
+    }
+
     private void StartFadeCoroutine(CanvasGroup canvasGroup, bool isFadeOut, float duration, Action onComplete)
     {
-        if(corFade != null)
+        if(corFadeBS != null)
         {
-            StopCoroutine(corFade);
-            corFade = null;
+            StopCoroutine(corFadeBS);
+            corFadeBS = null;
         }
 
-        corFade = StartCoroutine(Fade(canvasGroup, isFadeOut, duration, onComplete));
+        corFadeBS = StartCoroutine(Fade(canvasGroup, isFadeOut, duration, onComplete));
     }
 
     private IEnumerator Fade(CanvasGroup canvasGroup, bool isFadeOut, float duration, Action onComplete)
@@ -77,7 +101,6 @@ public class UIManager : MonoBehaviour
         float finalValue = isFadeOut ? 0 : 1;
         float alpha = canvasGroup.alpha;
         float value = isFadeOut ? -alpha : alpha;
-        alpha = value;
         
         while(value < finalValue)
         {
@@ -88,7 +111,7 @@ public class UIManager : MonoBehaviour
         }
 
         canvasGroup.alpha = finalValue;
-        corFade = null;
-        onComplete();
+        corFadeBS = null;
+        onComplete?.Invoke();
     }
 }

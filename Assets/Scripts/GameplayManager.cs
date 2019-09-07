@@ -57,8 +57,11 @@ public class GameplayManager : MonoBehaviour
     private void LevelLoaded()
     {
         DungeonManager.Instance.LevelLoaded -= LevelLoaded;
-        UIManager.Instance.ShowHideLoadingScreen(false);
-        UIManager.Instance.BlackScrFadeOut(FadeDuration, () => { });
+        UIManager.Instance.BlackScrFadeInOut(FadeDuration, type =>
+        {
+            if(type == EFIEnums.FadeType.FadeIn)
+                UIManager.Instance.ShowHideLoadingScreen(false);
+        });
     }
 
     private void GamePause(bool isPause)
@@ -72,9 +75,8 @@ public class GameplayManager : MonoBehaviour
     {
         UIManager.Instance.BlackScrFadeIn(FadeDuration, () =>
         { 
-            UIManager.Instance.ShowHideLoadingScreen(true);
-            GameItems.Instance.ResetItems();
-            SceneManager.LoadScene(1);
+            UIManager.Instance.ShowEndLevelScreen(true);
+            UIManager.Instance.BlackScrFadeOut(FadeDuration, null);
         });
     }
 

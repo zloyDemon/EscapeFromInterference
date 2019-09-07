@@ -11,4 +11,10 @@ public class EFIEnums
         DisableGO,
         None,
     }
+    
+    public enum FadeType
+    {
+        FadeIn,
+        FadeOut,
+    }
 }
