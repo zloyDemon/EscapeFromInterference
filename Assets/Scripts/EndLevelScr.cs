@@ -4,19 +4,27 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
-public class EndLevelScr : MonoBehaviour
+public class EndLevelScr : BaseWindow
 {
     [SerializeField] private Text labelText;
     [SerializeField] private Button continueButton;
 
-    private void Awake()
+    public override void Show()
     {
+        base.Show();
+        labelText.text = FormatStringLabel();
         continueButton.onClick.AddListener(ContinueButtonClick);
     }
 
-    private void OnEnable()
+    public override void Close()
     {
-        labelText.text = FormatStringLabel();
+        base.Close();
+        continueButton.onClick.RemoveListener(ContinueButtonClick);
+    }
+
+    public void LogOpen()
+    {
+        Debug.Log($"EndLevelOpen");
     }
 
     private string FormatStringLabel()
@@ -34,8 +42,9 @@ public class EndLevelScr : MonoBehaviour
         {
             if (type == EFIEnums.FadeType.FadeIn)
             {
+                
+                Close();
                 UIManager.Instance.ShowHideLoadingScreen(true);
-                UIManager.Instance.ShowEndLevelScreen(false);
                 GameItems.Instance.ResetItems();
             }
 

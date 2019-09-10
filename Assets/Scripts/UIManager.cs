@@ -10,12 +10,14 @@ public class UIManager : MonoBehaviour
     
     [SerializeField] CanvasGroup fadeImage;
     [SerializeField] RectTransform loadingScreen;
-    [SerializeField] RectTransform endLevelScreen;
-
+    [SerializeField] Menus menus;
+    
     private Coroutine corFadeBS;
     private Coroutine corFadeElement;
 
     public static UIManager Instance { get; private set; }
+
+    public Menus Menus => menus;
 
     public GameUI GameUI { get; set; }
     
@@ -38,16 +40,23 @@ public class UIManager : MonoBehaviour
         if (GameUI == null)
             GameUI = gameUI;
     }
-    //TODO Временное решение
+
+    public void ShowMenu<T>(Action<T> initialize) where T : BaseWindow
+    {
+        Action<BaseWindow> action = m => initialize((m as T));
+        var menu = menus.Show<T>();
+        if(initialize != null)
+            action(menu);
+    }
+
+    public void CloseMenu()
+    {
+        menus.CloseCurrentWindow();
+    }
+
     public void ShowHideLoadingScreen(bool isShow)
     {
         loadingScreen.gameObject.SetActive(isShow);
-    }
-
-    //TODO Временное решение
-    public void ShowEndLevelScreen(bool isShow)
-    {
-        endLevelScreen.gameObject.SetActive(isShow);
     }
 
     public void BlackScrFadeOut(float duration, Action onComplete)

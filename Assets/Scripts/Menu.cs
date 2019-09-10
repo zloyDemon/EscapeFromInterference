@@ -16,10 +16,12 @@ public class Menu : MonoBehaviour
 
     private void NewGameClick()
     {
-        UIManager.Instance.BlackScrFadeIn(2f, () =>
+        UIManager.Instance.BlackScrFadeInOut(2f, type =>
         {
-            UIManager.Instance.ShowHideLoadingScreen(true);
-            SceneManager.LoadScene(1);
+            if(type == EFIEnums.FadeType.FadeIn)
+                UIManager.Instance.ShowHideLoadingScreen(true);
+            if(type == EFIEnums.FadeType.FadeOut)
+                SceneManager.LoadScene(1);
         });
     }
 }

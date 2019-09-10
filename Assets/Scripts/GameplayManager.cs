@@ -73,10 +73,13 @@ public class GameplayManager : MonoBehaviour
 
     public void MissionCompleted(MissionInfo missionInfo)
     {
-        UIManager.Instance.BlackScrFadeIn(FadeDuration, () =>
-        { 
-            UIManager.Instance.ShowEndLevelScreen(true);
-            UIManager.Instance.BlackScrFadeOut(FadeDuration, null);
+        UIManager.Instance.BlackScrFadeInOut(FadeDuration, t =>
+        {
+            if (t == EFIEnums.FadeType.FadeIn)
+            {
+                IsGamePause = true;
+                UIManager.Instance.ShowMenu<EndLevelScr>(m => m.LogOpen());
+            }
         });
     }
 
