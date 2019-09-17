@@ -27,8 +27,12 @@ public class Menus : MonoBehaviour
     }
 
     public T Show<T>() where T : BaseWindow
-    {
+    {   
         var menu = GetMenuType<T>();
+
+        if (menu.IsShowing)
+            return menu;
+        
         CurrentOpenedWindow = menu;
         CurrentOpenedWindow.OnWindowClosed += OnWindowClosed;
         if (windowsStack.Count > 0)
@@ -43,6 +47,11 @@ public class Menus : MonoBehaviour
         return menu;
     }
 
+    public T GetMenu<T>() where T : BaseWindow
+    {
+        return GetMenuType<T>();
+    }
+
     public void CloseCurrentWindow()
     {
         if(windowsStack.Count == 0)
@@ -51,7 +60,7 @@ public class Menus : MonoBehaviour
         CurrentOpenedWindow.OnWindowClosed -= OnWindowClosed;
         var menu = windowsStack.Pop();
         menu.transform.SetSiblingIndex(0);
-        menu.Close();
+        //menu.Close();
         
         if (windowsStack.Count > 0)
         {

@@ -7,10 +7,12 @@ using UnityEngine.UI;
 public class Menu : MonoBehaviour
 {
     [SerializeField] private Button newGameBtn;
+    [SerializeField] private Button preferenceBtn;
 
     private void Awake()
     {
         newGameBtn.onClick.AddListener(NewGameClick);
+        preferenceBtn.onClick.AddListener(PrefOpen);
         UIManager.Instance.BlackScrFadeOut(2f, () => { });
     }
 
@@ -23,5 +25,10 @@ public class Menu : MonoBehaviour
             if(type == EFIEnums.FadeType.FadeOut)
                 SceneManager.LoadScene(1);
         });
+    }
+
+    private void PrefOpen()
+    {
+        UIManager.Instance.ShowMenu<PreferenceWindow>(m => {});
     }
 }

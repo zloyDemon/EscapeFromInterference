@@ -27,6 +27,7 @@ public class GameUI : MonoBehaviour
     private float toValue = 1.0f;
     private bool isReset = false;
     private Coroutine corFade;
+    private PauseWindow pauseWindow;
     
     public float CurrentIndicateValue { get; set; }
     public Joystick Joystick => joystick;
@@ -86,8 +87,21 @@ public class GameUI : MonoBehaviour
 
     private void PauseGame()
     {
-        bool isPause = GameplayManager.Instance.IsGamePause;
-        GameplayManager.Instance.IsGamePause = !isPause;
+        GameplayManager.Instance.IsGamePause = true;
+        pauseWindow = UIManager.Instance.ShowMenu<PauseWindow>(m => {});
+        pauseWindow.OnWindowClosed += OnPauseWindowClosed;
+    }
+
+    private void OnPauseWindowClosed(BaseWindow baseWindow)
+    {
+        Debug.Log("OnPausedClosed");
+        if (pauseWindow != null)
+        {
+            pauseWindow.OnWindowClosed -= OnPauseWindowClosed;
+            pauseWindow = null;
+        }
+
+        GameplayManager.Instance.IsGamePause = false;
     }
 
     private void ChangeBatteryClick()

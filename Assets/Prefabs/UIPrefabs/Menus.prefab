@@ -61,6 +61,9 @@ MonoBehaviour:
   menuParent: {fileID: 7593628629537383831}
   menus:
   - {fileID: 250926533069404215, guid: da18f961c6546234b88465db9b8bf93b, type: 3}
+  - {fileID: 4665518575993977790, guid: 7514b7f5fd8fe7c43a314ae5749096c1, type: 3}
+  - {fileID: 2819399359087922044, guid: 82b239b0e020de34dac06bed46050425, type: 3}
+  fadeBg: {fileID: 0}
 --- !u!1 &8045239930191336549
 GameObject:
   m_ObjectHideFlags: 0
