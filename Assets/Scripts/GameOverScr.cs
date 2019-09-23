@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
-public class GameOverScr : MonoBehaviour
+public class GameOverScr : BaseWindow
 {
     [SerializeField] private Text gameOverText;
     [SerializeField] private CanvasGroup textCanvasGroup;
@@ -46,15 +46,13 @@ public class GameOverScr : MonoBehaviour
     {
         UIManager.Instance.BlackScrFadeIn(2f, () =>
         {
+            Close();
             SceneManager.LoadScene(1);
         });
     }
 
     private void ExitGameClick()
     {
-        UIManager.Instance.BlackScrFadeIn(0.5f, () =>
-        {
-            SceneManager.LoadScene(0);
-        });
+        GameplayManager.Instance.ReturnToMenu(Close);
     }
 }

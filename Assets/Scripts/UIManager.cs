@@ -41,7 +41,7 @@ public class UIManager : MonoBehaviour
             GameUI = gameUI;
     }
 
-    public T ShowMenu<T>(Action<T> initialize) where T : BaseWindow
+    public T ShowMenu<T>(Action<T> initialize = null) where T : BaseWindow
     {
         Action<BaseWindow> action = m => initialize((m as T));
         var menu = menus.Show<T>();

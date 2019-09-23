@@ -17,7 +17,6 @@ public class GameUI : MonoBehaviour
     [SerializeField] Text subtitleText;
     [SerializeField] CanvasGroup fadeImage;
     [SerializeField] Joystick joystick;
-    [SerializeField] GameOverScr gameOverScr;
     [SerializeField] Button pauseButton;
     
     private static GameUI _instance;
@@ -55,7 +54,7 @@ public class GameUI : MonoBehaviour
 
     private void EndGame()
     {
-        gameOverScr.Init();
+        UIManager.Instance.ShowMenu<GameOverScr>(w => w.Init());
     }
 
     private void OnDestroy()
@@ -66,6 +65,7 @@ public class GameUI : MonoBehaviour
         GameplayManager.Instance.EndGame -= EndGame;
         GameplayManager.Instance.PauseGame -= PauseGame;
         SubtitleManager.Instance.SubtitleSet -= SetSubtitleText;
+        UIManager.Instance.SetGameUI(null);
     }
     
     private void InstanceOnBatteryCountChange(int value)

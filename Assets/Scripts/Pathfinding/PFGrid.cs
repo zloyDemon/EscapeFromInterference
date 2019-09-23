@@ -11,7 +11,7 @@ public class PFGrid : MonoBehaviour
     public bool displayGridGizmos;
     public LayerMask mask;
     public Vector2 worldGridSize;
-    public float nodeRadius = 1f;
+    public float nodeRadius = 16f;
 
     private float nodeDiameter;
     private int gridSizeX, gridSizeY;
@@ -51,7 +51,7 @@ public class PFGrid : MonoBehaviour
     private void LevelLoaded()
     {
         worldGridSize = DungeonManager.Instance.Size;
-        nodeDiameter = nodeRadius * 2;
+        nodeDiameter = (nodeRadius * 2);
         gridSizeX = Mathf.RoundToInt(worldGridSize.x / nodeDiameter);
         gridSizeY = Mathf.RoundToInt(worldGridSize.y / nodeDiameter);
         CreateGrid();

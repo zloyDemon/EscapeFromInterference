@@ -60,7 +60,6 @@ public class Menus : MonoBehaviour
         CurrentOpenedWindow.OnWindowClosed -= OnWindowClosed;
         var menu = windowsStack.Pop();
         menu.transform.SetSiblingIndex(0);
-        //menu.Close();
         
         if (windowsStack.Count > 0)
         {

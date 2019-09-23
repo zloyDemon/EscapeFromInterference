@@ -50,7 +50,7 @@ public class DungeonManager : MonoBehaviour
         StartCoroutine(CoLoadLevel());
     }
 
-    private void Load()
+    private IEnumerator Load()
     {
         string path = string.Format(LevelPrefix, missionInfo.Level);
         var loadGrid = Resources.Load<Grid>(path);
@@ -62,9 +62,12 @@ public class DungeonManager : MonoBehaviour
         var tilemapGround = dungeon.transform.Find("Ground").GetComponent<Tilemap>();
         var tilemapWall = dungeon.transform.Find("Wall").GetComponent<Tilemap>();
         var tilemapBlack = dungeon.transform.Find("Black").GetComponent<Tilemap>();
+
+        int cellUnit = (int) dungeon.cellSize.x;
         
-        Size = tilemapWall.cellBounds.size;
-        var center = tilemapWall.cellBounds.center;
+        Size = tilemapWall.cellBounds.size * cellUnit;
+        
+        var center = tilemapWall.cellBounds.center * cellUnit;
         
         Vector3 newDungPosition = new Vector3(dungeon.transform.position.x - center.x, dungeon.transform.position.y - center.y, 0);
         dungeon.transform.position = newDungPosition;
@@ -83,7 +86,6 @@ public class DungeonManager : MonoBehaviour
         
         var ps = dungeon.transform.Find("PlayerSpawnPos");
         
-        //TODO For testing
         BlackTiles(tilemapGround, tilemapWall, tilemapBlack);
         
         RandomSpawnObjects(keyPrefab, itemsParent.transform, missionInfo.NeedKeys);
@@ -95,6 +97,8 @@ public class DungeonManager : MonoBehaviour
         for (int i = 0; i < patrolPointsParent.childCount; i++)
             patrolPointsForGhost.Add(patrolPointsParent.GetChild(i).gameObject);
         SpawnGhosts(player.transform, patrolPointsForGhost);
+        
+        yield break;
     }
 
     private void BlackTiles(Tilemap tilemapFloor, Tilemap tilemapWall, Tilemap tilemapBlack)
@@ -157,13 +161,17 @@ public class DungeonManager : MonoBehaviour
         GameObject patrolPoint = new GameObject("PatrolPoint");
         List<GameObject> ghosts = new List<GameObject>();
         var points = patrolPoints;
+        bool flag = false;
         foreach (var point in points)
         {
+            if(flag)
+                continue;
             var ghost = Instantiate(ghostPrefab, point.transform.position, Quaternion.identity);
             var ghostScript = ghost.GetComponent<Ghost>();
             ghostScript.PatrolPoints = patrolPoints.ToArray();
             ghostScript.Target = targetPlayer.transform;
             ghosts.Add(ghost);
+            flag = true;
         }
 
         GameplayManager.Instance.GhostOnMap = ghosts;
@@ -171,8 +179,7 @@ public class DungeonManager : MonoBehaviour
 
     private IEnumerator CoLoadLevel()
     {
-        Load();
-        yield return new WaitForEndOfFrame();
+        yield return Load();
         Debug.Log("LevelLoaded: " + MissionManager.Instance.CurrentMission.MissionIndex);
         LevelLoaded();
     }

@@ -6,9 +6,10 @@ using UnityEngine;
 public class DeviceManager
 {
     public const float EndSignalValue = 0.9f;
-    public static readonly float CheckGhostDeviceMaxValue = 5f;
-    public static readonly float CheckDistance = 3f;
-    public static DeviceManager Instance { private set; get; } = new DeviceManager();
+    
+    public static readonly float CheckDistance = 100f;
+    
+    public static DeviceManager Instance { get; } = new DeviceManager();
     
     public float SignalValue { private set; get; }
 

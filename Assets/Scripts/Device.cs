@@ -3,9 +3,6 @@
 [RequireComponent(typeof(CheckEnemy))]
 public class Device : MonoBehaviour
 {
-    public static readonly float CheckGhostDeviceMaxValue = 5f;
-    public static readonly float CheckDistance = 3f;
-    
     private CheckEnemy checkEnemy;
 
     public float DeviceValue { get; set; }
@@ -36,16 +33,16 @@ public class Device : MonoBehaviour
 
     private float CalcDeviceValue(Transform nearEnemy)
     {
-        var distance = Vector2.Distance(transform.position, nearEnemy.transform.position);
+        var distance = Vector2.Distance(transform.position, nearEnemy.transform.position); // 20
         
         if (distance > DeviceManager.CheckDistance)
             return 0.01f;
         
-        var deviceValue = CheckGhostDeviceMaxValue - ((distance * CheckGhostDeviceMaxValue) / CheckDistance);
+        var deviceValue = 1 - ((distance / DeviceManager.CheckDistance));
         
-        if (deviceValue > DeviceManager.CheckGhostDeviceMaxValue)
-            deviceValue = DeviceManager.CheckGhostDeviceMaxValue;
+        if (deviceValue > 1)
+            deviceValue = 1;
         
-        return (float)deviceValue / DeviceManager.CheckGhostDeviceMaxValue;
+        return deviceValue;
     }
 }

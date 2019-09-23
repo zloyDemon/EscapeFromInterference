@@ -5,7 +5,8 @@ using UnityEngine;
 
 public class Movement : MonoBehaviour
 {
-    [SerializeField] float MoveSpeed = 25f;
+    private const float MoveSpeed = 60f;
+    
     [SerializeField] Flashlight flashlight;
     
     private Rigidbody2D rb;
@@ -28,7 +29,6 @@ public class Movement : MonoBehaviour
     {
         rb = GetComponent<Rigidbody2D>();
         animator = GetComponent<Animator>();
-        
     }
 
     private void OnDestroy()
@@ -71,11 +71,11 @@ public class Movement : MonoBehaviour
     
     private void FlashlightChangeValue(float value)
     {
-        GameItems.Instance.SetBatteryValue(value);
+        //GameItems.Instance.SetBatteryValue(value);
     }
     
     private void FlashlightDead()
     {
-        GameplayManager.Instance.GameOver(EFIEnums.GameOverReason.FlashlightDead);
+        //GameplayManager.Instance.GameOver(EFIEnums.GameOverReason.FlashlightDead);
     }
 }

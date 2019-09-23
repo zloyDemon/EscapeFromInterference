@@ -6,23 +6,18 @@ public class Ghost : MonoBehaviour
 {
     private static readonly float maxDistanceDelta = 1f;
     private static readonly float minDistanceToPoint = 1f;
-    
-    [SerializeField] GameObject[] patrolPoints;
+
     [SerializeField] Transform target;
     
     private CheckEnemy checkEnemy;
     private Vector2 currentPoint;
     private IState<Ghost> currentState;
     private Agent agent;
-    private bool isTakingTargt;
+    private bool isTakingTarget;
     private Coroutine corTakingTarget;
     
     public Agent Agent { get { return agent; } }
-    public GameObject[] PatrolPoints 
-    { 
-        get => patrolPoints;
-        set => patrolPoints = value;
-    }
+    public GameObject[] PatrolPoints { get; set; }
 
     public Transform Target
     {
@@ -51,6 +46,7 @@ public class Ghost : MonoBehaviour
     {
         if(currentState != null)
             currentState.Update();
+        Debug.Log("Distance: " + DistanceToTarget());
     }
 
     public void FollowToTarget(Vector2 target)
@@ -70,7 +66,7 @@ public class Ghost : MonoBehaviour
     
     private Vector2 GetNextPointPosition()
     {
-        var newPoint = patrolPoints[Random.Range(0, patrolPoints.Length)];
+        var newPoint = PatrolPoints[Random.Range(0, PatrolPoints.Length)];
         return newPoint.transform.position;
     }
 

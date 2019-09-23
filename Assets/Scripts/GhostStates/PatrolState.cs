@@ -1,11 +1,12 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AI;
 
 public class PatrolState : IState<Ghost>
 { 
-    private const float PointDistance = 1f;
-    private const float CheckTargetDistance = 1.5f;
+    private const float PointDistance = 10f;
+    private const float CheckTargetDistance = 50f;
     
     private Ghost currentGhost;
     private GameObject[] patrolPoints;
@@ -17,10 +18,11 @@ public class PatrolState : IState<Ghost>
         patrolPoints = ghost.PatrolPoints;
         currentPoint = GetNewPatrolPoint();
         currentGhost.FollowToTarget(currentPoint);
+        Debug.LogError("Patrol state enter");
     }
 
     public void Update()
-    {
+    {     
         if (Vector2.Distance(currentGhost.transform.position, currentPoint) <= PointDistance)
         {
             currentPoint = GetNewPatrolPoint();
@@ -43,11 +45,8 @@ public class PatrolState : IState<Ghost>
 
     private void CheckForNewState()
     {
-        if (Vector2.Distance(currentGhost.transform.position, currentGhost.Target.position) <= CheckTargetDistance)
-        {
-            currentGhost.ChangeState(new FollowTargetState());
-            Debug.Log("New state: Follow player");
-        }
+        if (Vector2.Distance(currentGhost.transform.position, currentGhost.Target.position) <= CheckTargetDistance)  
+            currentGhost.ChangeState(new FollowTargetState()); 
     }
     
 }

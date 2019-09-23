@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class Agent : MonoBehaviour
 {
-    private const float MoveDuration = 0.5f;
+    private const float MoveDuration = 20f;
     private const float DistanceToPoint = 0.5f;
     
     private Path path;
@@ -64,7 +64,6 @@ public class Agent : MonoBehaviour
             currentPath.Clear();
             currentPath = null;
         }
-            
     }
 
     private void Update()

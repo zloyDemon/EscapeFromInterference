@@ -5,7 +5,8 @@ using UnityEngine.UI;
 
 public class PreferenceWindow : BaseWindow
 {
-    [SerializeField] private Button closeButton;
+    [SerializeField] Button closeButton;
+    [SerializeField] Button savePreferencesButton;
 
     private void Awake()
     {

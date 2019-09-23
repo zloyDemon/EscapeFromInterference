@@ -10,17 +10,12 @@ public class GameItems
     private float batteryValue;
     private float deviceValue;
 
-    private static GameItems instance = new GameItems();
-    
-    public static GameItems Instance
-    {
-        get { return instance; }
-    }
-    
-    public int BatteryCount { get { return batteryCount; }}
-    public int KeyCount { get { return keyCount; }}
-    public float BatteryValue { get { return batteryValue; }}
-    public float DeviceValue { get { return deviceValue; }}
+    public static GameItems Instance { get; } = new GameItems();
+
+    public int BatteryCount => batteryCount;
+    public int KeyCount => keyCount;
+    public float BatteryValue => batteryValue;
+    public float DeviceValue => deviceValue;
 
     public event Action<int> BatteryCountChange = c => { }; 
     public event Action<int> KeyCountChange = c => { }; 

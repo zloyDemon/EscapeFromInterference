@@ -48,9 +48,8 @@ namespace Pathfinding
             }
 
             for (int i = 0; i < lookPoints.Length - 1; i++)
-            {
                 Gizmos.DrawLine(lookPoints[i], lookPoints[i+1]);
-            }
+            
             
             Gizmos.color = Color.white;
             foreach (var l in turnBoundaries)

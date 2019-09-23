@@ -112,4 +112,13 @@ public class GameplayManager : MonoBehaviour
         EndGame();
         IsGamePause = true;
     }
+
+    public void ReturnToMenu(Action actionBeforeExit)
+    {
+        UIManager.Instance.BlackScrFadeIn(1f, () =>
+        {
+            actionBeforeExit();
+            SceneManager.LoadScene(0);
+        });
+    }
 }

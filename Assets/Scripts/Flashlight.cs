@@ -6,18 +6,18 @@ using UnityEngine;
 [RequireComponent(typeof(SpriteMask))]
 public class Flashlight : MonoBehaviour
 {
-    [SerializeField] Transform target;
-    [SerializeField] SpriteRenderer blinkImage;
-    
+    private static readonly float FlashlightStartScaleValue = .5f;
+ 
     private const float FlashlightMaxValue = 5f;
     private const float FlashlightMinValue = 0f;
     private const float FlashlighPassValueTime = 5f;
-    private const float FlashlightReduceDuration = 0.1f;
-    private const float FlashlightScaleEndValue = 0.3f;
+    private const float FlashlightReduceDuration = 1.5f;
+    private const float FlashlightScaleEndValue = .15f;
     private const float FLReduceChargeValue = 0.5f;
     private const float FLBlinkDuration = 0.15f;
     
-    private static readonly float FlashlightStartScaleValue = 1.5f;
+    [SerializeField] Transform target;
+    [SerializeField] SpriteRenderer blinkImage;
     
     private Transform flashlight;
     private SpriteMask spriteMask;

@@ -67,13 +67,15 @@ public class Pathfinder : MonoBehaviour
         
         if (pathSuccess)
         {
-            wayPoints = RetracePath(startNode, targetNode);
+            var list = RetracePath(startNode, targetNode);
+            list.Add(request.pathEnd);
+            wayPoints = list.ToArray();
             pathSuccess = wayPoints.Length > 0;
         }
         callback(new PathResult(wayPoints, pathSuccess, request.callback));
     }
 
-    Vector2[] RetracePath(Node startNode, Node endNode)
+    List<Vector2> RetracePath(Node startNode, Node endNode)
     {
         List<Node> path = new List<Node>();
         Node currentNode = endNode;
@@ -85,17 +87,17 @@ public class Pathfinder : MonoBehaviour
         }
 
         List<Vector2> list = new List<Vector2>();
+
         bool flag = true;
-        foreach (var node in path)
+        for (int i = 0; i < path.Count; i++)
         {
-            if(flag)
-                list.Add(node.worldPosition);
+            if (flag || i == 0)
+                list.Add(path[i].worldPosition);
             flag = !flag;
         }
 
-        var wayPoints = list.ToArray();
-        Array.Reverse(wayPoints);
-        return wayPoints;
+        list.Reverse();
+        return list;
     }
 
     Vector2[] SimplifyPath(List<Node> path)

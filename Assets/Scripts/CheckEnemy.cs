@@ -6,7 +6,7 @@ using UnityEngine;
 
 public class CheckEnemy : MonoBehaviour
 {
-    public static readonly float CheckRadius = 3f;
+    public static readonly float CheckRadius = 100f;
 
     public enum CheckTargetType
     {
