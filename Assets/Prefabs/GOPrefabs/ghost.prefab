@@ -93,7 +93,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b08c7e7a27f0e72428a41fcd99362680, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  patrolPoints: []
   target: {fileID: 0}
 --- !u!114 &1402089041790878329
 MonoBehaviour:

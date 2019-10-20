@@ -6,7 +6,7 @@ using UnityEngine.SceneManagement;
 
 public class GameplayManager : MonoBehaviour
 {
-    public static readonly float TimeForEnd = 1f;
+    public static readonly float TimeForEnd = 2f;
     private const float FadeDuration = 0.8f;
     
     private static GameplayManager instance;
@@ -16,7 +16,8 @@ public class GameplayManager : MonoBehaviour
     private bool isGamePause;
     private float checkGhostDeviceValue;
     private EFIEnums.GameOverReason currentReason = EFIEnums.GameOverReason.None;
-    
+    private bool canGameOver;
+
     public static GameplayManager Instance => instance;
     
     public Transform Player { get; set; }
@@ -29,6 +30,12 @@ public class GameplayManager : MonoBehaviour
     {
         set => GamePause(value);
         get => isGamePause;
+    }
+
+    public bool CanGameOver
+    {
+        set => canGameOver = value;
+        get => canGameOver;
     }
 
     private void Awake()
@@ -57,6 +64,7 @@ public class GameplayManager : MonoBehaviour
     private void LevelLoaded()
     {
         DungeonManager.Instance.LevelLoaded -= LevelLoaded;
+        canGameOver = true;
         UIManager.Instance.BlackScrFadeInOut(FadeDuration, type =>
         {
             if(type == EFIEnums.FadeType.FadeIn)
@@ -85,7 +93,7 @@ public class GameplayManager : MonoBehaviour
 
     public void GameOver(EFIEnums.GameOverReason reason)
     {
-        if (currentReason == reason)
+        if (currentReason == reason || !canGameOver)
             return;
 
         if (reason == EFIEnums.GameOverReason.DisableGO)
@@ -110,6 +118,7 @@ public class GameplayManager : MonoBehaviour
     {
         yield return new WaitForSeconds(TimeForEnd);
         EndGame();
+        Debug.Log("End game reason: " + currentReason);
         IsGamePause = true;
     }
 

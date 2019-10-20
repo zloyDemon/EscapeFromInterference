@@ -46,7 +46,6 @@ public class Ghost : MonoBehaviour
     {
         if(currentState != null)
             currentState.Update();
-        Debug.Log("Distance: " + DistanceToTarget());
     }
 
     public void FollowToTarget(Vector2 target)

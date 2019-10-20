@@ -30,8 +30,6 @@ public class UIManager : MonoBehaviour
             Destroy(gameObject);
         
         DontDestroyOnLoad(gameObject);
-        
-        fadeImage.alpha = 1;
     }
 
     //TODO Временное решение
@@ -49,6 +47,11 @@ public class UIManager : MonoBehaviour
             action(menu);
 
         return menu;
+    }
+
+    public void SetBlackScreen(bool active)
+    {
+        fadeImage.alpha = active ? 1 : 0;
     }
 
     public T GetMenu<T>() where T : BaseWindow

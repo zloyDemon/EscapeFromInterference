@@ -11,7 +11,7 @@ public class Flashlight : MonoBehaviour
     private const float FlashlightMaxValue = 5f;
     private const float FlashlightMinValue = 0f;
     private const float FlashlighPassValueTime = 5f;
-    private const float FlashlightReduceDuration = 1.5f;
+    private const float FlashlightReduceDuration = 0.5f;
     private const float FlashlightScaleEndValue = .15f;
     private const float FLReduceChargeValue = 0.5f;
     private const float FLBlinkDuration = 0.15f;
@@ -79,8 +79,12 @@ public class Flashlight : MonoBehaviour
         transform.localScale = Vector2.one * FlashlightStartScaleValue;
         GameItems.Instance.SetBatteryValue(FlashlightChargeValue);
         GameItems.Instance.SetBatteryCount(-1);
-        if(coChargeFullFlashlight != null)
+        if (coChargeFullFlashlight != null)
+        {
             StopCoroutine(coChargeFullFlashlight);
+            coChargeFullFlashlight = null;
+        }
+            
         coChargeFullFlashlight = StartCoroutine(CoChangeChargeFlashlight());
         Debug.Log("ChargeFullFlashlight");
     }

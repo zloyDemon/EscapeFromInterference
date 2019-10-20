@@ -58,5 +58,6 @@ public class GameItems
     public void ResetItems()
     {
         keyCount = 0;
+        deviceValue = 0.01f;
     }
 }

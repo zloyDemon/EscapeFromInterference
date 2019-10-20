@@ -12,6 +12,7 @@ public class SpritePostProcess : AssetPostprocessor
         {
             importer.spritePixelsPerUnit = 1;
             importer.textureType = TextureImporterType.Sprite;
+            importer.filterMode = FilterMode.Point;
         }
     }
 }

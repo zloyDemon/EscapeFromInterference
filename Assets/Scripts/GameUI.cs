@@ -34,7 +34,6 @@ public class GameUI : MonoBehaviour
 
     private void Awake()
     {
-        UIManager.Instance.SetGameUI(this);
         subtitleText.text = string.Empty;
         GameItems.Instance.BatteryCountChange += InstanceOnBatteryCountChange;
         GameItems.Instance.BatteryValueChange += InstanceOnBatteryValueChange;
@@ -43,6 +42,7 @@ public class GameUI : MonoBehaviour
         pauseButton.onClick.AddListener(PauseGame);
         InstanceOnBatteryCountChange(GameItems.Instance.BatteryCount);
         InstanceOnKeyCountChange(0);
+        UIManager.Instance.SetGameUI(this);
     }
 
     private void Start()

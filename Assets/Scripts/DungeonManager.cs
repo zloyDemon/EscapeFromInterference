@@ -161,17 +161,15 @@ public class DungeonManager : MonoBehaviour
         GameObject patrolPoint = new GameObject("PatrolPoint");
         List<GameObject> ghosts = new List<GameObject>();
         var points = patrolPoints;
-        bool flag = false;
-        foreach (var point in points)
+
+        for(int i = 0; i < MissionManager.Instance.CurrentMission.GhostCount; i++)
         {
-            if(flag)
-                continue;
-            var ghost = Instantiate(ghostPrefab, point.transform.position, Quaternion.identity);
+            var ghost = Instantiate(ghostPrefab, points[points.Count - 1].transform.position, Quaternion.identity);
             var ghostScript = ghost.GetComponent<Ghost>();
             ghostScript.PatrolPoints = patrolPoints.ToArray();
             ghostScript.Target = targetPlayer.transform;
+            ghost.GetComponent<SpriteRenderer>().enabled = false;
             ghosts.Add(ghost);
-            flag = true;
         }
 
         GameplayManager.Instance.GhostOnMap = ghosts;

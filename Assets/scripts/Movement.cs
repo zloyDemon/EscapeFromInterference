@@ -22,13 +22,13 @@ public class Movement : MonoBehaviour
         flashlight.FlashlightChangeValue += FlashlightChangeValue; 
         flashlight.FlashlighDead += FlashlightDead;
         camera = Camera.main.gameObject;
-        joystick = UIManager.Instance.GameUI.Joystick;
     }
 
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
         animator = GetComponent<Animator>();
+        joystick = UIManager.Instance.GameUI.Joystick;
     }
 
     private void OnDestroy()
@@ -71,11 +71,11 @@ public class Movement : MonoBehaviour
     
     private void FlashlightChangeValue(float value)
     {
-        //GameItems.Instance.SetBatteryValue(value);
+        GameItems.Instance.SetBatteryValue(value);
     }
     
     private void FlashlightDead()
     {
-        //GameplayManager.Instance.GameOver(EFIEnums.GameOverReason.FlashlightDead);
+        GameplayManager.Instance.GameOver(EFIEnums.GameOverReason.FlashlightDead);
     }
 }

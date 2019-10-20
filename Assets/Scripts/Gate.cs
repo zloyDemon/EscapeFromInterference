@@ -10,9 +10,13 @@ public class Gate : MonoBehaviour
         {
             var needKey = MissionManager.Instance.CurrentMission.NeedKeys;
             if(GameItems.Instance.KeyCount >= needKey)
+            {
+                GameplayManager.Instance.CanGameOver = false;
                 MissionManager.Instance.MissionComplete();
+            }
+                
             else
-                SubtitleManager.Instance.SetSubtitle("I need more key for this door");
+                SubtitleManager.Instance.SetSubtitle("I need more keys for this door");
         }
     }
 }

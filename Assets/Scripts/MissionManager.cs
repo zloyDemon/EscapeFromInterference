@@ -15,7 +15,7 @@ public class MissionManager
     public void Init()
     {
         Missions = GenetatesMissions();
-        CurrentMission = Missions[0];
+        CurrentMission = Missions[2];
         Debug.Log("MenuManager Init");
     }
 
@@ -65,6 +65,7 @@ public class MissionManager
         {
             new MissionInfo(0, 3,2,2,false),
             new MissionInfo(1, 2,3,2,false),
+            new MissionInfo(2, 2,3,2,false),
         };
         return missions;
     }
