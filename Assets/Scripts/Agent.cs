@@ -88,9 +88,6 @@ public class Agent : MonoBehaviour
 
     private void OnDrawGizmos()
     {
-        if (path != null)
-        {
-            path.DrawWithGizmos();
-        }
+        path?.DrawWithGizmos();
     }
 }

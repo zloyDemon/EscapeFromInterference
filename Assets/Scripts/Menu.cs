@@ -22,7 +22,6 @@ public class Menu : MonoBehaviour
         preferenceBtn.onClick.AddListener(PrefOpen);
         StartCoroutine(PlayLogoAnimation());
         UIManager.Instance.SetBlackScreen(true);
-        
         UIManager.Instance.BlackScrFadeOut(2f, () => { });
         logoAnimator = logoImg.GetComponent<Animator>();
         

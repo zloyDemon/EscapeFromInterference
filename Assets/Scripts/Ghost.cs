@@ -44,8 +44,7 @@ public class Ghost : MonoBehaviour
 
     private void Update()
     {
-        if(currentState != null)
-            currentState.Update();
+        currentState?.Update();
     }
 
     public void FollowToTarget(Vector2 target)
@@ -80,5 +79,11 @@ public class Ghost : MonoBehaviour
     {
         var distance = Vector3.Distance(transform.position, Target.position);
         return distance;
+    }
+
+    private void OnDrawGizmos()
+    {
+        Gizmos.color = Color.white;
+        Gizmos.DrawCube(transform.position, Vector3.one * 5);
     }
 }

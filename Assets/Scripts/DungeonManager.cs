@@ -23,10 +23,12 @@ public class DungeonManager : MonoBehaviour
     private List<Vector3> occupPosition = new List<Vector3>();
     private MissionInfo missionInfo;
 
+    public event Action LevelLoaded = () => {};
+    
     public static DungeonManager Instance { get; private set; }
     public int DungLevel { get { return missionInfo.Level; }}
     public List<Vector3> AvailablePosition { get { return availablePosition; }}
-    public event Action LevelLoaded = () => {};
+    public List<Ghost> GhostsOnMap { get; }
     public Vector3 WPosition { get; private set; }
     public Vector3 Size { get; private set; }
 

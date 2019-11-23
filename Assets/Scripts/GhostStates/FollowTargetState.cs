@@ -11,7 +11,7 @@ public class FollowTargetState : IState<Ghost>
     public void Enter(Ghost ghost)
     {
         currentGhost = ghost;
-        Debug.LogError("Follow state enter");
+        Debug.Log(currentGhost.gameObject + ": Follow state enter");
         oldAgentSpeed = currentGhost.Agent.AgentMoveSpeed;
         currentGhost.Agent.AgentMoveSpeed = oldAgentSpeed +20f;
     }

@@ -6,7 +6,7 @@ using UnityEngine;
 
 public class MissionManager 
 {
-    public static MissionManager Instance { get; private set; } = new MissionManager();
+    public static MissionManager Instance { get; } = new MissionManager();
     
     public MissionInfo CurrentMission { get; private set; }
     public List<MissionInfo> Missions { get; private set; }
@@ -15,7 +15,8 @@ public class MissionManager
     public void Init()
     {
         Missions = GenetatesMissions();
-        CurrentMission = Missions[2];
+        //TODO TEST
+        CurrentMission = Missions[0];
         Debug.Log("MenuManager Init");
     }
 
@@ -30,12 +31,12 @@ public class MissionManager
         return result;
     }
 
-    public void ChangeMission(int missionIndex)
+    private void ChangeMission(int missionIndex)
     {
         if(missionIndex < 0 && missionIndex >= Missions.Count)
             throw new Exception($"MissionManager: ChangeMission: Mission with {missionIndex} not found.");
         
-        CurrentMission = Missions[missionIndex];    
+        CurrentMission = Missions[missionIndex];
     }
 
     public void MissionComplete()
@@ -67,6 +68,7 @@ public class MissionManager
             new MissionInfo(1, 2,3,2,false),
             new MissionInfo(2, 2,3,2,false),
         };
+        
         return missions;
     }
 }

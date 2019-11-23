@@ -18,7 +18,6 @@ public class PatrolState : IState<Ghost>
         patrolPoints = ghost.PatrolPoints;
         currentPoint = GetNewPatrolPoint();
         currentGhost.FollowToTarget(currentPoint);
-        Debug.LogError("Patrol state enter");
     }
 
     public void Update()
